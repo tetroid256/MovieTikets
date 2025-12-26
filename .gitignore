@@ -3,4 +3,11 @@ venv/
 __pycache__/
 *.pyc
 .DS_Store
+# Docker
+.docker/
+node_modules/
+# もしコンテナ内でデータを保存する設定（volumes）にしている場合
+data/
+db_data/
+*.log
 @
