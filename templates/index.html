@@ -2,7 +2,10 @@
 <html>
 <head>
     <title>映画料金計算</title>
-    <style>body { font-family: sans-serif; padding: 20px; }</style>
+    <style>
+        body { font-family: sans-serif; padding: 20px; line-height: 2; }
+        #resultText { margin-top: 20px; color: blue; }
+    </style>
 </head>
 <body>
     <h1>チケット料金計算システム</h1>
@@ -10,17 +13,35 @@
     年齢: <input type="number" id="ageInput"><br>
     会員: <input type="checkbox" id="memInput"><br>
     <button onclick="calculate()">計算する</button>
-    <h2 id="resultText"></h2>
+
+    <hr>
+    <h2 id="resultText">（ここに結果が出ます）</h2>
 
     <script>
         async function calculate() {
+            // 入力値の取得
             const name = document.getElementById("nameInput").value;
             const age = document.getElementById("ageInput").value;
             const isMember = document.getElementById("memInput").checked;
 
-            const res = await fetch(`/greet?name=${name}&age=${age}&is_member=${isMember}`);
-            const data = await response.json();
-            document.getElementById("resultText").innerText = `${data.reply} 料金: ${data.fee}円`;
+            if (!name) {
+                alert("名前を入力してください");
+                return;
+            }
+
+            try {
+                // 1. fetchの戻り値を「res」という変数に入れる
+                const res = await fetch(`/greet?name=${name}&age=${age}&is_member=${isMember}`);
+                
+                // 2. 「res」を使ってjsonを解析する（ここを修正しました）
+                const data = await res.json();
+                
+                // 3. 画面に反映
+                document.getElementById("resultText").innerText = `${data.reply} 料金: ${data.fee}円`;
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById("resultText").innerText = "通信エラーが発生しました";
+            }
         }
     </script>
 </body>
