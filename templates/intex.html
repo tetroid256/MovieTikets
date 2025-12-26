@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>映画料金計算</title>
+    <style>body { font-family: sans-serif; padding: 20px; }</style>
+</head>
+<body>
+    <h1>チケット料金計算システム</h1>
+    名前: <input type="text" id="nameInput"><br>
+    年齢: <input type="number" id="ageInput"><br>
+    会員: <input type="checkbox" id="memInput"><br>
+    <button onclick="calculate()">計算する</button>
+    <h2 id="resultText"></h2>
+
+    <script>
+        async function calculate() {
+            const name = document.getElementById("nameInput").value;
+            const age = document.getElementById("ageInput").value;
+            const isMember = document.getElementById("memInput").checked;
+
+            const res = await fetch(`/greet?name=${name}&age=${age}&is_member=${isMember}`);
+            const data = await response.json();
+            document.getElementById("resultText").innerText = `${data.reply} 料金: ${data.fee}円`;
+        }
+    </script>
+</body>
+</html>
