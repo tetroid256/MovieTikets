@@ -55,8 +55,10 @@ piyo
     - ログイン画面:L
 
 - ユーザー情報
-    - ログイン:M
+    - ログイン:L
     - ログアウト:L
+    - 鑑賞履歴:L
+    - 鑑賞回数:M
 
 - データ管理
     - 購入履歴の一時保存:H
@@ -80,14 +82,19 @@ CSV
 
 -----
 
+### シーケンス図
+![シーケンス](static/images/sequence.png)
+
 ### ディレクトリ構成予定
 ```
 MovieTikets/
-MOVIETIKETS/
-├── templates/
-│   └── index.html       # フロントエンド
+├── templates/           # フロントエンド
+│   ├── index.html       # 映画選択
+│   ├── booking.html     # 情報入力
+│   └── ressult.html     # 結果表示 
 ├── docker-compose.yml   # コンテナ起動設定
 ├── Dockerfile           # 環境構築設定
+├── static/images        # 画像置き
 ├── main.py              # バックエンド
 ├── models.py            # クラス
 ├── requirements.txt     # ライブラリ一覧
