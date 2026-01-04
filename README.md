@@ -77,3 +77,19 @@ HTML
 FastAPI
 #### データ管理
 CSV
+
+-----
+
+### ディレクトリ構成予定
+```
+MovieTikets/
+MOVIETIKETS/
+├── templates/
+│   └── index.html       # フロントエンド
+├── docker-compose.yml   # コンテナ起動設定
+├── Dockerfile           # 環境構築設定
+├── main.py              # バックエンド
+├── models.py            # クラス
+├── requirements.txt     # ライブラリ一覧
+└── README.md            # 説明書
+```

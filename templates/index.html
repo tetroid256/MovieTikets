@@ -1,48 +1,269 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-    <title>映画料金計算</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Tickets</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; line-height: 2; }
-        #resultText { margin-top: 20px; color: blue; }
+        /* --- 基本設定 --- */
+        body {
+            margin: 0;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            background-color: #fff;
+            color: #333;
+        }
+
+        /* --- ヘッダー --- */
+        header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .user-icon {
+            width: 32px;
+            height: 32px;
+            background-color: #333;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* --- ヒーローエリア（カルーセル） --- */
+        .hero-section {
+            background-color: #f0f2f5;
+            padding: 40px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .carousel-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .carousel-track {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            /* カードの並び順をJSで制御するため order を使う準備 */
+        }
+
+        .movie-card {
+            width: 160px;
+            height: 220px;
+            background-color: #e0e0e0;
+            border-radius: 8px;
+            /* 基本は非表示にして、JSで選択された3枚だけ表示する */
+            display: none; 
+            justify-content: center;
+            align-items: center;
+            color: #999;
+            margin: 0 10px;
+            transition: all 0.3s ease-in-out;
+            opacity: 0.6;
+            transform: scale(0.9);
+            cursor: pointer;
+        }
+
+        /* 中央のカード（アクティブ） */
+        .movie-card.active {
+            width: 200px;
+            height: 280px;
+            opacity: 1;
+            transform: scale(1.1);
+            background-color: #d0d0d0;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            z-index: 2;
+            cursor: default;
+        }
+
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .nav-btn {
+            background-color: rgba(0,0,0,0.1);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            color: #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+        .nav-btn:hover {
+            background-color: rgba(0,0,0,0.2);
+        }
+
+        /* --- おすすめセクション --- */
+        .recommend-section {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .recommend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+            background-color: #f5f6fa;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        .recommend-card {
+            background-color: #e0e0e0;
+            height: 200px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #999;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .recommend-card:hover {
+            transform: translateY(-5px);
+            background-color: #d4d4d4;
+        }
+
     </style>
 </head>
 <body>
-    <h1>チケット料金計算システム</h1>
-    名前: <input type="text" id="nameInput"><br>
-    年齢: <input type="number" id="ageInput"><br>
-    会員: <input type="checkbox" id="memInput"><br>
-    <button onclick="calculate()">計算する</button>
 
-    <hr>
-    <h2 id="resultText">（ここに結果が出ます）</h2>
+    <header>
+        <div class="user-icon" onclick="alert('ログイン画面へ')">👤</div>
+    </header>
+
+    <div class="hero-section">
+        <div class="carousel-container">
+            <button class="nav-btn" onclick="moveSlide(-1)">&#10094;</button>
+            
+            <div class="carousel-track" id="track">
+                <!-- Movie A ~ F (6枚) -->
+                <div class="movie-card" onclick="selectMovie('Movie A')">
+                    <img src="https://placehold.jp/150x200.png?text=Movie%20A" class="card-img">
+                </div>
+                <div class="movie-card" onclick="selectMovie('Movie B')">
+                    <img src="https://placehold.jp/200x280.png?text=Movie%20B" class="card-img">
+                </div>
+                <div class="movie-card" onclick="selectMovie('Movie C')">
+                    <img src="https://placehold.jp/150x200.png?text=Movie%20C" class="card-img">
+                </div>
+                <div class="movie-card" onclick="selectMovie('Movie D')">
+                    <img src="https://placehold.jp/150x200.png?text=Movie%20D" class="card-img">
+                </div>
+                <div class="movie-card" onclick="selectMovie('Movie E')">
+                    <img src="https://placehold.jp/150x200.png?text=Movie%20E" class="card-img">
+                </div>
+                <div class="movie-card" onclick="selectMovie('Movie F')">
+                    <img src="https://placehold.jp/150x200.png?text=Movie%20F" class="card-img">
+                </div>
+            </div>
+
+            <button class="nav-btn" onclick="moveSlide(1)">&#10095;</button>
+        </div>
+    </div>
+
+    <div class="recommend-section">
+        <div class="section-title">おすすめ</div>
+        <div class="recommend-grid">
+            <div class="recommend-card" onclick="selectMovie('Rec 1')">
+                <img src="https://placehold.jp/150x200.png?text=Rec%201" class="card-img">
+            </div>
+            <div class="recommend-card" onclick="selectMovie('Rec 2')">
+                <img src="https://placehold.jp/150x200.png?text=Rec%202" class="card-img">
+            </div>
+            <div class="recommend-card" onclick="selectMovie('Rec 3')">
+                <img src="https://placehold.jp/150x200.png?text=Rec%203" class="card-img">
+            </div>
+            <div class="recommend-card" onclick="selectMovie('Rec 4')">
+                <img src="https://placehold.jp/150x200.png?text=Rec%204" class="card-img">
+            </div>
+        </div>
+    </div>
 
     <script>
-        async function calculate() {
-            // 入力値の取得
-            const name = document.getElementById("nameInput").value;
-            const age = document.getElementById("ageInput").value;
-            const isMember = document.getElementById("memInput").checked;
+        let currentIndex = 0; // 現在真ん中にあるカードのインデックス (0 = A, 1 = B ...)
+        const cards = document.querySelectorAll('.movie-card');
+        const totalCards = cards.length; // 6枚
 
-            if (!name) {
-                alert("名前を入力してください");
-                return;
-            }
-
-            try {
-                // 1. fetchの戻り値を「res」という変数に入れる
-                const res = await fetch(`/greet?name=${name}&age=${age}&is_member=${isMember}`);
-                
-                // 2. 「res」を使ってjsonを解析する（ここを修正しました）
-                const data = await res.json();
-                
-                // 3. 画面に反映
-                document.getElementById("resultText").innerText = `${data.reply} 料金: ${data.fee}円`;
-            } catch (error) {
-                console.error("Error:", error);
-                document.getElementById("resultText").innerText = "通信エラーが発生しました";
-            }
+        // インデックスが範囲外にならないように計算する関数
+        // (例: -1 になったら 5(F) にする、 6 になったら 0(A) にする)
+        function getWrappedIndex(index) {
+            return (index + totalCards) % totalCards;
         }
+
+        function updateCarousel() {
+            // 1. 全て一旦非表示にする & activeクラスを消す
+            cards.forEach(card => {
+                card.style.display = 'none';
+                card.classList.remove('active');
+                card.style.order = '0'; // 並び順リセット
+            });
+
+            // 2. 左・中央・右のインデックスを計算
+            const prevIndex = getWrappedIndex(currentIndex - 1);
+            const nextIndex = getWrappedIndex(currentIndex + 1);
+
+            const prevCard = cards[prevIndex];
+            const currCard = cards[currentIndex];
+            const nextCard = cards[nextIndex];
+
+            // 3. 表示設定と並び順(order)の指定
+            // 左 (order: 1)
+            prevCard.style.display = 'flex';
+            prevCard.style.order = '1';
+
+            // 中央 (order: 2, active)
+            currCard.style.display = 'flex';
+            currCard.style.order = '2';
+            currCard.classList.add('active');
+
+            // 右 (order: 3)
+            nextCard.style.display = 'flex';
+            nextCard.style.order = '3';
+        }
+
+        function moveSlide(direction) {
+            currentIndex = getWrappedIndex(currentIndex + direction);
+            updateCarousel();
+        }
+
+        function selectMovie(title) {
+            alert(title + " のチケット購入画面へ移動します");
+            // location.href = "/buy?title=" + encodeURIComponent(title);
+        }
+
+        // 初回実行
+        updateCarousel();
     </script>
 </body>
 </html>
