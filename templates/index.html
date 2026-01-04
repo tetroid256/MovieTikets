@@ -39,17 +39,21 @@
         /* --- ヒーローエリア（カルーセル） --- */
         .hero-section {
             background-color: #f0f2f5;
-            padding: 40px 0;
+            /* 高さを固定してグレー領域を安定させる */
+            height: 400px;
+            width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
+            /* はみ出し防止 */
+            overflow: hidden;
         }
 
         .carousel-container {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 15px;
             width: 100%;
             max-width: 800px;
         }
@@ -58,35 +62,36 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 100%;
-            /* カードの並び順をJSで制御するため order を使う準備 */
+            /* カード配置のための幅確保 */
+            min-width: 600px; 
         }
 
         .movie-card {
+            /* 通常時（左右のカード） */
             width: 160px;
             height: 220px;
             background-color: #e0e0e0;
             border-radius: 8px;
-            /* 基本は非表示にして、JSで選択された3枚だけ表示する */
-            display: none; 
+            display: none; /* JSで制御 */
             justify-content: center;
             align-items: center;
-            color: #999;
-            margin: 0 10px;
+            margin: 0 15px;
             transition: all 0.3s ease-in-out;
             opacity: 0.6;
             transform: scale(0.9);
             cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         /* 中央のカード（アクティブ） */
         .movie-card.active {
+            /* 大きくする */
             width: 200px;
             height: 280px;
             opacity: 1;
-            transform: scale(1.1);
+            transform: scale(1.0); /* scaleでの拡大をやめ、width/heightで実サイズ変更 */
             background-color: #d0d0d0;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
             z-index: 2;
             cursor: default;
         }
@@ -99,21 +104,23 @@
         }
 
         .nav-btn {
-            background-color: rgba(0,0,0,0.1);
+            background-color: rgba(255,255,255,0.6);
             border: none;
             width: 40px;
             height: 40px;
             border-radius: 50%;
             cursor: pointer;
             font-size: 20px;
-            color: #555;
+            color: #333;
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 10;
+            transition: 0.2s;
         }
         .nav-btn:hover {
-            background-color: rgba(0,0,0,0.2);
+            background-color: rgba(255,255,255,1);
+            transform: scale(1.1);
         }
 
         /* --- おすすめセクション --- */
@@ -167,25 +174,13 @@
             <button class="nav-btn" onclick="moveSlide(-1)">&#10094;</button>
             
             <div class="carousel-track" id="track">
-                <!-- Movie A ~ F (6枚) -->
-                <div class="movie-card" onclick="selectMovie('Movie A')">
-                    <img src="https://placehold.jp/150x200.png?text=Movie%20A" class="card-img">
+                <!-- Pythonから渡された movies リストでループする -->
+                {% for movie in movies %}
+                <div class="movie-card" onclick="selectMovie('{{ movie.title }}')">
+                    <!-- CSVの image_url と title を埋め込む -->
+                    <img src="{{ movie.image_url }}" class="card-img" alt="{{ movie.title }}">
                 </div>
-                <div class="movie-card" onclick="selectMovie('Movie B')">
-                    <img src="https://placehold.jp/200x280.png?text=Movie%20B" class="card-img">
-                </div>
-                <div class="movie-card" onclick="selectMovie('Movie C')">
-                    <img src="https://placehold.jp/150x200.png?text=Movie%20C" class="card-img">
-                </div>
-                <div class="movie-card" onclick="selectMovie('Movie D')">
-                    <img src="https://placehold.jp/150x200.png?text=Movie%20D" class="card-img">
-                </div>
-                <div class="movie-card" onclick="selectMovie('Movie E')">
-                    <img src="https://placehold.jp/150x200.png?text=Movie%20E" class="card-img">
-                </div>
-                <div class="movie-card" onclick="selectMovie('Movie F')">
-                    <img src="https://placehold.jp/150x200.png?text=Movie%20F" class="card-img">
-                </div>
+                {% endfor %}
             </div>
 
             <button class="nav-btn" onclick="moveSlide(1)">&#10095;</button>
@@ -211,25 +206,21 @@
     </div>
 
     <script>
-        let currentIndex = 0; // 現在真ん中にあるカードのインデックス (0 = A, 1 = B ...)
+        let currentIndex = 0; 
         const cards = document.querySelectorAll('.movie-card');
-        const totalCards = cards.length; // 6枚
+        const totalCards = cards.length;
 
-        // インデックスが範囲外にならないように計算する関数
-        // (例: -1 になったら 5(F) にする、 6 になったら 0(A) にする)
         function getWrappedIndex(index) {
             return (index + totalCards) % totalCards;
         }
 
         function updateCarousel() {
-            // 1. 全て一旦非表示にする & activeクラスを消す
             cards.forEach(card => {
                 card.style.display = 'none';
                 card.classList.remove('active');
-                card.style.order = '0'; // 並び順リセット
+                card.style.order = '0'; 
             });
 
-            // 2. 左・中央・右のインデックスを計算
             const prevIndex = getWrappedIndex(currentIndex - 1);
             const nextIndex = getWrappedIndex(currentIndex + 1);
 
@@ -237,17 +228,16 @@
             const currCard = cards[currentIndex];
             const nextCard = cards[nextIndex];
 
-            // 3. 表示設定と並び順(order)の指定
-            // 左 (order: 1)
+            // 左
             prevCard.style.display = 'flex';
             prevCard.style.order = '1';
 
-            // 中央 (order: 2, active)
+            // 中央
             currCard.style.display = 'flex';
             currCard.style.order = '2';
             currCard.classList.add('active');
 
-            // 右 (order: 3)
+            // 右
             nextCard.style.display = 'flex';
             nextCard.style.order = '3';
         }
@@ -259,10 +249,8 @@
 
         function selectMovie(title) {
             alert(title + " のチケット購入画面へ移動します");
-            // location.href = "/buy?title=" + encodeURIComponent(title);
         }
 
-        // 初回実行
         updateCarousel();
     </script>
 </body>
