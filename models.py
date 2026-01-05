@@ -19,18 +19,26 @@ class Ticket:
         BABY, KIDS, TEEN, SENIOR = 3, 13, 18, 60
         # 料金設定
         prices = {#Movieから値段を取ってくる
-            "baby": self.movie.kids,
+            "baby": self.movie.baby,
             "kids": self.movie.kids,
             "teen": self.movie.teen,
             "base": self.movie.base,
             "senior": self.movie.senior
         }
-
+        fee = 0
         if self.age < BABY:
-            return prices["FREE"]
+            fee = prices["baby"]
         elif self.age < KIDS:
-            return prices["U13"]
+            fee = prices["kids"]
+        elif self.age < TEEN:
+            fee = prices["teen"]
+        elif self.age > SENIOR:
+            fee = prices["senior"]
+        else:
+            fee = prices["base"]
         
-        if self.is_member:
-            return prices["MEMBER10"] if self.count % 10 == 0 else prices["MEMBER"]
-        return prices["NORMAL"]
+        if self.is_member == True:
+            fee = max(fee - 300 , 0)
+        if self.count % 10 == 0:
+            fee = max(fee - 300 , 0)
+        return fee
