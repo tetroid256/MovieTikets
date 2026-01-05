@@ -1,18 +1,29 @@
+class Movie:#値段を持つだけ
+    def __init__(self, title: str, image_url: str, base: int, teen: int, kids: int, baby: int, senior: int):
+        self.title = title
+        self.image_url = image_url
+        self.base = base
+        self.teen = teen
+        self.kids = kids
+        self.baby = baby
+        self.senior = senior
+    
 class Ticket:
-    def __init__(self, age: int, is_member: bool, count: int = 1):
+    def __init__(self, age: int, is_member: bool, movie: Movie, count: int = 1):
         self.age = age
         self.is_member = is_member
+        self.movie = movie
         self.count = count
 
     def fee_calc(self):
-        BABY, KIDS = 3, 13
+        BABY, KIDS, TEEN, SENIOR = 3, 13, 18, 60
         # 料金設定
-        prices = {
-            "FREE": 0,
-            "U13": 500,
-            "MEMBER10": 500,
-            "MEMBER": 700,
-            "NORMAL": 1000
+        prices = {#Movieから値段を取ってくる
+            "baby": self.movie.kids,
+            "kids": self.movie.kids,
+            "teen": self.movie.teen,
+            "base": self.movie.base,
+            "senior": self.movie.senior
         }
 
         if self.age < BABY:

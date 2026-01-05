@@ -1,7 +1,7 @@
-id,title,image_url
-1,アバター3,https://placehold.jp/150x200.png?text=Avatar3
-2,スパイファミリー,https://placehold.jp/200x280.png?text=SpyFamily
-3,スターウォーズ,https://placehold.jp/150x200.png?text=StarWars
-4,ハリーポッター,https://placehold.jp/150x200.png?text=HarryPotter
-5,ドラえもん,https://placehold.jp/150x200.png?text=Doraemon
-6,トップガン,https://placehold.jp/150x200.png?text=TopGun
+id,title,image_url,base,teen,kids,baby,senior
+1,バレット・ストーム,/static/images/poster/BulletStorm.png,2000,1500,1000,0,1300
+2,呪われた廃校舎,/static/images/poster/CursedSchool.png,1900,1400,1000,0,1200
+3,君と見た最後の雪,/static/images/poster/LastSnow.png,1900,1000,1000,0,1200
+4,わんわん大冒険！,/static/images/poster/PawsPlay.png,1800,1000,800,0,1000
+5,劇場版 蒼空のガーディアン,/static/images/poster/SkyGuardian.png,2000,1500,1000,0,1300
+6,トライヘッド・シャークVSペイル・ホエール,/static/images/poster/TriPale.png,1200,800,500,0,1000
