@@ -1,5 +1,15 @@
 class Movie:#値段を持つだけ
-    def __init__(self, title: str, image_url: str, base: int, teen: int, kids: int, baby: int, senior: int):
+    def __init__(
+        self, 
+        title: str,
+        image_url: str,
+        base: int,
+        teen: int,
+        kids: int,
+        baby: int,
+        senior: int,
+    ):
+        
         self.title = title
         self.image_url = image_url
         self.base = base
