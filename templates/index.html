@@ -248,7 +248,7 @@
         }
 
         function selectMovie(title) {
-            alert(title + " のチケット購入画面へ移動します");
+            location.href = "/booking?title=" + encodeURIComponent(title);
         }
 
         updateCarousel();

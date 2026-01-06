@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Form 
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -31,10 +31,12 @@ def get_movie_data():
             )
             movie_database[titles] = movie
         return movie_database
+    
+MOVIE_DB = get_movie_data()
 
 @app.get("/", response_class=HTMLResponse)
 def read_root(request: Request):
-    movie_db = get_movie_data()
+    movie_db = MOVIE_DB
     movie_list = list(movie_db.values())
     amount = min(len(movie_list),4)
     rec_list = random.sample(movie_list,amount)
@@ -53,3 +55,35 @@ def greet_user(name: str, age: int, is_member: bool):
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)
+
+#booking用
+
+@app.get("/booking", response_class=HTMLResponse)
+def get_booking_page(request: Request, title: str):
+    return templates.TemplateResponse("booking.html", {
+        "request": request,
+        "movie_title": title # 必要ならテンプレート内で使う
+    })
+
+@app.post("/result", response_class=HTMLResponse)
+def show_result(
+    request: Request,
+    title: str = Form(...),
+    date: str = Form(...),
+    seat: str = Form(...),
+    name: str = Form(...),
+    age: int = Form(...),
+    is_member: bool = Form(False)
+):
+    movie_db = MOVIE_DB
+    watch_movie = movie_db.get(title)
+    ticket = Ticket(age=age,is_member=is_member,movie=watch_movie,count = 1)
+    fee = ticket.fee_calc()
+    return templates.TemplateResponse("result.html", {
+        "request": request,
+        "name": name,
+        "movie": watch_movie,
+        "date": date,
+        "seat": seat,
+        "price": fee
+    })

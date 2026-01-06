@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>予約画面</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; text-align: center; }
+        .step-container { display: none; } /* 基本は隠す */
+        .active { display: block; } /* アクティブなものだけ表示 */
+        
+        /* 座席のスタイル */
+        .seat-grid { display: grid; grid-template-columns: repeat(5, 50px); gap: 10px; justify-content: center; margin: 20px 0; }
+        .seat { width: 50px; height: 50px; background: #ddd; cursor: pointer; border-radius: 5px; line-height: 50px; }
+        .seat.selected { background: #4CAF50; color: white; }
+        .seat.occupied { background: #555; cursor: not-allowed; color: #888; }
+        
+        .btn { padding: 10px 20px; background: #333; color: #fff; border: none; cursor: pointer; margin-top: 20px; }
+        .btn:disabled { background: #ccc; }
+    </style>
+</head>
+<body>
+
+    <h2 id="movieTitleDisplay">映画タイトル</h2>
+    <hr>
+
+    <!-- STEP 1: 日時選択 -->
+    <div id="step1" class="step-container active">
+        <h3>STEP 1: 日時を選んでください</h3>
+        <input type="date" id="dateInput">
+        <br><br>
+        <button class="btn" onclick="goToStep2()">次へ（座席選択）</button>
+    </div>
+
+    <!-- STEP 2: 座席選択 -->
+    <div id="step2" class="step-container">
+        <h3>STEP 2: 座席を選んでください</h3>
+        <div class="seat-grid" id="seatMap">
+            <!-- JSで座席を生成します -->
+        </div>
+        <p>選択中の座席: <span id="selectedSeatDisplay">-</span></p>
+        <button class="btn" onclick="backToStep1()">戻る</button>
+        <button class="btn" id="toStep3Btn" onclick="goToStep3()" disabled>次へ（情報入力）</button>
+    </div>
+
+    <!-- STEP 3: 個人情報入力 -->
+    <div id="step3" class="step-container">
+        <h3>STEP 3: お客様情報を入力してください</h3>
+        <!-- 最終的にこのフォームを送信します -->
+        <form action="/result" method="post">
+            <!-- 隠しデータ（これまでの選択情報） -->
+            <input type="hidden" name="title" id="hiddenTitle">
+            <input type="hidden" name="date" id="hiddenDate">
+            <input type="hidden" name="seat" id="hiddenSeat">
+
+            <label>お名前: <input type="text" name="name" required></label><br><br>
+            <label>年齢: <input type="number" name="age" required></label><br><br>
+            <label>会員ですか？: <input type="checkbox" name="is_member" value="true"></label><br><br>
+            
+            <button type="button" class="btn" onclick="backToStep2()">戻る</button>
+            <button type="submit" class="btn" style="background-color: #d63031;">予約確定・計算</button>
+        </form>
+    </div>
+
+    <script>
+        // URLから映画タイトルを取得 (?title=XXX)
+        const params = new URLSearchParams(window.location.search);
+        const movieTitle = params.get('title') || "映画未選択";
+        document.getElementById('movieTitleDisplay').innerText = "予約: " + movieTitle;
+        document.getElementById('hiddenTitle').value = movieTitle;
+
+        // データ保持用変数
+        let selectedDate = "";
+        let selectedSeat = "";
+
+        // --- 画面遷移ロジック ---
+        function showStep(stepId) {
+            document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
+            document.getElementById(stepId).classList.add('active');
+        }
+
+        function goToStep2() {
+            const dateInput = document.getElementById('dateInput').value;
+            if (!dateInput) return alert("日付を選択してください");
+            
+            selectedDate = dateInput;
+            document.getElementById('hiddenDate').value = selectedDate;
+            
+            // 座席生成（本来はバックエンドから空き情報を貰うが、今はダミー）
+            renderSeats(); 
+            showStep('step2');
+        }
+
+        function backToStep1() { showStep('step1'); }
+
+        function goToStep3() {
+            if (!selectedSeat) return alert("座席を選択してください");
+            document.getElementById('hiddenSeat').value = selectedSeat;
+            showStep('step3');
+        }
+
+        function backToStep2() { showStep('step2'); }
+
+        // --- 座席生成ロジック ---
+        function renderSeats() {
+            const container = document.getElementById('seatMap');
+            container.innerHTML = ""; // クリア
+            const rows = ['A', 'B', 'C'];
+            const cols = [1, 2, 3, 4, 5];
+
+            rows.forEach(row => {
+                cols.forEach(col => {
+                    const seatId = row + col;
+                    const div = document.createElement('div');
+                    div.className = 'seat';
+                    div.innerText = seatId;
+                    
+                    // クリックイベント
+                    div.onclick = () => selectSeat(div, seatId);
+                    container.appendChild(div);
+                });
+            });
+        }
+
+        function selectSeat(element, seatId) {
+            // 既に選択済みのスタイルを解除
+            document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
+            // 新しく選択
+            element.classList.add('selected');
+            selectedSeat = seatId;
+            document.getElementById('selectedSeatDisplay').innerText = seatId;
+            document.getElementById('toStep3Btn').disabled = false;
+        }
+    </script>
+</body>
+</html>

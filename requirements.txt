@@ -2,4 +2,4 @@ fastapi
 uvicorn
 pydantic
 jinja2
-random
+python-multipart

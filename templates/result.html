@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>予約完了 - Movie Tickets</title>
+    <style>
+        body {
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            margin: 0;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 { color: #2d3436; margin-bottom: 10px; }
+        .subtitle { color: #636e72; margin-bottom: 30px; }
+
+        .movie-info {
+            border-bottom: 2px dashed #dfe6e9;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .poster-img {
+            width: 140px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .details-box {
+            text-align: left;
+            background-color: #fafafa;
+            padding: 20px 40px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            line-height: 2.2;
+        }
+
+        .label { color: #636e72; font-weight: bold; margin-right: 10px; }
+
+        .price-area {
+            background-color: #ffeaa7;
+            color: #d63031;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .price-label { font-size: 14px; color: #2d3436; font-weight: bold; }
+        .price-value { font-size: 32px; font-weight: bold; }
+
+        .home-btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 40px;
+            background-color: #2d3436;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .home-btn:hover {
+            background-color: #000;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>予約が完了しました</h1>
+        <p class="subtitle">ご来場をお待ちしております。</p>
+
+        <div class="movie-info">
+            <!-- main.py から渡された movie オブジェクトを使用 -->
+            <img src="{{ movie.image_url }}" alt="ポスター" class="poster-img">
+            <h2>{{ movie.title }}</h2>
+        </div>
+
+        <div class="details-box">
+            <div><span class="label">お名前:</span> {{ name }} 様</div>
+            <div><span class="label">鑑賞日:</span> {{ date }}</div>
+            <div><span class="label">座席:</span> {{ seat }}</div>
+        </div>
+
+        <div class="price-area">
+            <div class="price-label">お支払い金額</div>
+            <div class="price-value">¥{{ price }}</div>
+        </div>
+
+        <a href="/" class="home-btn">トップページに戻る</a>
+    </div>
+
+</body>
+</html>
