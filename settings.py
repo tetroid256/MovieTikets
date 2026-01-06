@@ -1,0 +1,5 @@
+#年齢区分
+BABY, KIDS, TEEN, SENIOR = 3, 13, 18, 60
+
+#割引額
+DISCOUNT = 300

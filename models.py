@@ -1,3 +1,4 @@
+import settings
 class Movie:#値段を持つだけ
     def __init__(
         self, 
@@ -28,8 +29,9 @@ class Ticket:
     def fee_calc(self):#映倫規定により
         if self.age < 15 and self.movie.kids == -1:
             return -1
-        
-        BABY, KIDS, TEEN, SENIOR = 3, 13, 18, 60
+
+        BABY, KIDS, TEEN, SENIOR = settings.BABY, settings,KIDS, settings.TEEN, settings.SENIOR
+        DISCOUNT = settings.DISCOUNT
 
         # 料金設定
         prices = {#Movieから値段を取ってくる
@@ -52,7 +54,7 @@ class Ticket:
             fee = prices["base"]
         
         if self.is_member == True:
-            fee = max(fee - 300 , 0)
+            fee = max(fee - DISCOUNT , 0)
         if self.count % 10 == 0:
-            fee = max(fee - 300 , 0)
+            fee = max(fee - DISCOUNT , 0)
         return fee
