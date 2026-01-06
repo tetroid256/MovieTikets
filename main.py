@@ -4,6 +4,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import uvicorn
 import csv
+import random
 
 # 自分の作ったファイルをインポートする
 from models import Ticket,Movie
@@ -35,10 +36,12 @@ def get_movie_data():
 def read_root(request: Request):
     movie_db = get_movie_data()
     movie_list = list(movie_db.values())
-    
+    amount = min(len(movie_list),4)
+    rec_list = random.sample(movie_list,amount)
     return templates.TemplateResponse("index.html", {
         "request": request,
-        "movies": movie_list
+        "movies": movie_list,
+        "recommendations": rec_list
     })
 
 @app.get("/greet")

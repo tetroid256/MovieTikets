@@ -137,8 +137,9 @@
         }
 
         .recommend-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
             gap: 20px;
             background-color: #f5f6fa;
             padding: 30px;
@@ -147,7 +148,8 @@
 
         .recommend-card {
             background-color: #e0e0e0;
-            height: 200px;
+            width: 160px; 
+            height: 220px;
             border-radius: 8px;
             display: flex;
             justify-content: center;
@@ -155,6 +157,10 @@
             color: #999;
             cursor: pointer;
             transition: transform 0.2s;
+        }
+        .recommend-card:hover {
+            transform: translateY(-5px);
+            background-color: #d4d4d4;
         }
         .recommend-card:hover {
             transform: translateY(-5px);
@@ -190,17 +196,11 @@
     <div class="recommend-section">
         <div class="section-title">おすすめ</div>
         <div class="recommend-grid">
-            <div class="recommend-card" onclick="selectMovie('Rec 1')">
-                <img src="https://placehold.jp/150x200.png?text=Rec%201" class="card-img">
+            {% for movie in recommendations %}
+            <div class="recommend-card" onclick="selectMovie('{{ movie.title }}')">
+                <img src="{{ movie.image_url }}" class="card-img" alt="{{ movie.title }}">
             </div>
-            <div class="recommend-card" onclick="selectMovie('Rec 2')">
-                <img src="https://placehold.jp/150x200.png?text=Rec%202" class="card-img">
-            </div>
-            <div class="recommend-card" onclick="selectMovie('Rec 3')">
-                <img src="https://placehold.jp/150x200.png?text=Rec%203" class="card-img">
-            </div>
-            <div class="recommend-card" onclick="selectMovie('Rec 4')">
-                <img src="https://placehold.jp/150x200.png?text=Rec%204" class="card-img">
+            {% endfor %}
             </div>
         </div>
     </div>
