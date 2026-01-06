@@ -16,7 +16,7 @@ class Ticket:
         self.count = count
 
     def fee_calc(self):
-        BABY, KIDS, TEEN, SENIOR = 3, 13, 18, 60
+        BABY, KIDS, TEEN, SENIOR = 3, 15, 18, 60
         # 料金設定
         prices = {#Movieから値段を取ってくる
             "baby": self.movie.baby,
