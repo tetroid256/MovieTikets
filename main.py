@@ -79,7 +79,14 @@ def show_result(
     watch_movie = movie_db.get(title)
     ticket = Ticket(age=age,is_member=is_member,movie=watch_movie,count = 1)
     fee = ticket.fee_calc()
-    return templates.TemplateResponse("result.html", {
+    if fee == -1:
+        return HTMLResponse("""
+            <h1>予約エラー</h1>
+            <p>この作品はR-15指定です。15歳未満の方はご鑑賞いただけません。</p>
+            <a href="/">トップに戻る</a>
+        """, status_code=400)
+    else:
+        return templates.TemplateResponse("result.html", {
         "request": request,
         "name": name,
         "movie": watch_movie,
