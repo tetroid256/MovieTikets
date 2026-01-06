@@ -46,16 +46,6 @@ def read_root(request: Request):
         "recommendations": rec_list
     })
 
-@app.get("/greet")
-def greet_user(name: str, age: int, is_member: bool):
-    # models.py の Ticket クラスを使う
-    cur_ticket = Ticket(age=age, is_member=is_member)
-    fee = cur_ticket.fee_calc()
-    return {"reply": f"こんにちは {name}様", "fee": fee}
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000)
-
 #booking用
 
 @app.get("/booking", response_class=HTMLResponse)

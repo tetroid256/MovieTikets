@@ -15,10 +15,12 @@ class Ticket:
         self.movie = movie
         self.count = count
 
-    def fee_calc(self):
+    def fee_calc(self):#映倫規定により
         if self.age < 15 and self.movie.kids == -1:
             return -1
+        
         BABY, KIDS, TEEN, SENIOR = 3, 13, 18, 60
+
         # 料金設定
         prices = {#Movieから値段を取ってくる
             "baby": self.movie.baby,
