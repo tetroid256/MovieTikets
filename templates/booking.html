@@ -21,7 +21,7 @@
 </head>
 <body>
 
-    <h2 id="movieTitleDisplay">映画タイトル</h2>
+    <h2>予約: {{ movie.title }}</h2>
     <hr>
 
     <!-- STEP 1: 日時選択 -->
@@ -49,7 +49,7 @@
         <!-- 最終的にこのフォームを送信します -->
         <form action="/result" method="post">
             <!-- 隠しデータ（これまでの選択情報） -->
-            <input type="hidden" name="title" id="hiddenTitle">
+            <input type="hidden" name="movie_id" id="hiddenMovie_id">
             <input type="hidden" name="date" id="hiddenDate">
             <input type="hidden" name="seat" id="hiddenSeat">
 
@@ -63,11 +63,15 @@
     </div>
 
     <script>
-        // URLから映画タイトルを取得 (?title=XXX)
+        // URLから映画IDを取得 (?movie_id=XXX)
         const params = new URLSearchParams(window.location.search);
-        const movieTitle = params.get('title') || "映画未選択";
-        document.getElementById('movieTitleDisplay').innerText = "予約: " + movieTitle;
-        document.getElementById('hiddenTitle').value = movieTitle;
+        const movieId = params.get('movie_id'); 
+        if (movieId) {
+            document.getElementById('hiddenMovie_id').value = movieId;
+        } else {
+            alert("エラー: 映画が選択されていません");
+            location.href = "/"; // トップに戻す
+        }
 
         // データ保持用変数
         let selectedDate = "";

@@ -189,9 +189,9 @@
             <div class="carousel-track" id="track">
                 <!-- Pythonから渡された movies リストでループする -->
                 {% for movie in movies %}
-                <div class="movie-card" onclick="selectMovie('{{ movie.title }}')">
+                <div class="movie-card" onclick="selectMovie('{{ movie.id }}')">
                     <!-- CSVの image_url と title を埋め込む -->
-                    <img src="{{ movie.image_url }}" class="card-img" alt="{{ movie.title }}">
+                    <img src="{{ movie.image_url }}" class="card-img" alt="{{ movie.id }}">
                 </div>
                 {% endfor %}
             </div>
@@ -202,15 +202,14 @@
 
     <div class="recommend-section">
         <div class="section-title">おすすめ</div>
-        <div class="recommend-grid">
-            {% for movie in recommendations %}
-            <div class="recommend-card" onclick="selectMovie('{{ movie.title }}')">
-                <img src="{{ movie.image_url }}" class="card-img" alt="{{ movie.title }}">
-            </div>
-            {% endfor %}
+            <div class="recommend-grid">
+                {% for movie in recommendations %}
+                <div class="recommend-card" onclick="selectMovie('{{ movie.id }}')">
+                    <img src="{{ movie.image_url }}" class="card-img" alt="{{ movie.id }}">
+                </div>
+                {% endfor %}
             </div>
         </div>
-    </div>
 
     <script>
         let currentIndex = 0; 
@@ -254,8 +253,8 @@
             updateCarousel();
         }
 
-        function selectMovie(title) {
-            location.href = "/booking?title=" + encodeURIComponent(title);
+        function selectMovie(id) {
+            location.href = "/booking?movie_id=" + encodeURIComponent(id);
         }
 
         updateCarousel();

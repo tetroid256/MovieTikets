@@ -19,14 +19,14 @@ def get_movie_data():
         reader = csv.DictReader(f)
         movie_database = {}
         for row in reader:
-            ids = row['id']
+            ids:str = row['movie_id']
             movie = Movie(
                 id = ids,
                 title = row['title'],
                 image_url = row['image_url'],
             )
             movie_database[ids] = movie
-    with open('prices.csv') as f:
+    with open('prices.csv', mode='r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
             mid = row['movie_id']
@@ -53,16 +53,17 @@ def read_root(request: Request):
 #booking用
 
 @app.get("/booking", response_class=HTMLResponse)
-def get_booking_page(request: Request, title: str):
+def get_booking_page(request: Request, movie_id: str):
+    movie = MOVIE_DB.get(movie_id)
     return templates.TemplateResponse("booking.html", {
         "request": request,
-        "movie_title": title # 必要ならテンプレート内で使う
+        "movie": movie
     })
 
 @app.post("/result", response_class=HTMLResponse)
 def show_result(
     request: Request,
-    title: str = Form(...),
+    movie_id: str = Form(...),
     date: str = Form(...),
     seat: str = Form(...),
     name: str = Form(...),
@@ -70,7 +71,7 @@ def show_result(
     is_member: bool = Form(False)
 ):
     movie_db = MOVIE_DB
-    watch_movie = movie_db.get(title)
+    watch_movie = movie_db.get(movie_id)
     ticket = Ticket(age=age,is_member=is_member,movie=watch_movie,count = 1)
     fee = ticket.fee_calc()
     if fee == -1:

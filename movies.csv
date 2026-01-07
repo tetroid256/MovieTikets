@@ -1,4 +1,4 @@
-id,title,image_url
+movie_id,title,image_url
 1,バレット・ストーム,/static/images/poster/BulletStorm.png
 2,呪われた廃校舎,/static/images/poster/CursedSchool.png
 3,君と見た最後の雪,/static/images/poster/LastSnow.png

@@ -124,7 +124,9 @@ MovieTikets/
 ├── static/images        # 画像置き
 ├── main.py              # バックエンド
 ├── models.py            # クラス
+├── settings.py          # 変数置くとこ
 ├── movies.csv           # 映画管理
+├── prices.csv           # 料金管理
 ├── requirements.txt     # ライブラリ一覧
 └── README.md            # 説明書
 ```
