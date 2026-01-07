@@ -19,18 +19,22 @@ def get_movie_data():
         reader = csv.DictReader(f)
         movie_database = {}
         for row in reader:
-            titles = row['title']
+            ids = row['id']
             movie = Movie(
-                title = titles,
+                id = ids,
+                title = row['title'],
                 image_url = row['image_url'],
-                base = int(row['base']),
-                teen = int(row['teen']),
-                kids = int(row['kids']),
-                baby = int(row['baby']),
-                senior = int(row['senior'])
             )
-            movie_database[titles] = movie
-        return movie_database
+            movie_database[ids] = movie
+    with open('prices.csv') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            mid = row['movie_id']
+            cat = row['category']
+            price = int(row['price'])
+
+            movie_database[mid].prices[cat] = price
+    return movie_database
     
 MOVIE_DB = get_movie_data()
 

@@ -2,22 +2,14 @@ import settings
 class Movie:#値段を持つだけ
     def __init__(
         self, 
+        id: int,
         title: str,
         image_url: str,
-        base: int,
-        teen: int,
-        kids: int,
-        baby: int,
-        senior: int,
     ):
-        
+        self.id = id,
         self.title = title
         self.image_url = image_url
-        self.base = base
-        self.teen = teen
-        self.kids = kids
-        self.baby = baby
-        self.senior = senior
+        self.prices = {}
     
 class Ticket:
     def __init__(self, age: int, is_member: bool, movie: Movie, count: int = 1):
