@@ -2,7 +2,6 @@ from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-import uvicorn
 import csv
 import random
 
@@ -72,6 +71,8 @@ def show_result(
 ):
     movie_db = MOVIE_DB
     watch_movie = movie_db.get(movie_id)
+    if not watch_movie:
+        return HTMLResponse("エラー", status_code=404)
     ticket = Ticket(age=age,is_member=is_member,movie=watch_movie,count = 1)
     fee = ticket.fee_calc()
     if fee == -1:
