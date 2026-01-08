@@ -6,7 +6,7 @@
     <title>予約 - {{ movie.title }}</title>
     <style>
         /* --- 共通設定 --- */
-        body { margin: 0; font-family: "Helvetica Neue", Arial, sans-serif; background-color: #f0f2f5; color: #333; }
+        body { margin: 0; font-family: "Helvetica Neue", Arial, sans-serif; background-color: #f0f2f5; color: #333; padding-bottom: 120px; /* フッターの分だけ余白を空ける */ }
         
         /* コンテナ */
         .container { max-width: 800px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); overflow: hidden; }
@@ -71,21 +71,24 @@
         .form-row:last-child { margin-bottom: 0; }
         input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem; box-sizing: border-box; }
         
-        /* 合計エリア */
-        .summary-area { background: #2d3436; color: #fff; padding: 30px; margin-top: 30px; border-radius: 8px; }
-        .coupon-row { display: flex; gap: 10px; margin-bottom: 20px; }
-        .coupon-row input { background: #fff; color: #333; border: none; }
-        
+        /* クーポンエリア（スクロール内） */
+        .coupon-area { background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .coupon-row { display: flex; gap: 10px; }
         .coupon-btn { 
-            background: #636e72; color: #fff; border: none; padding: 0 20px; border-radius: 6px; cursor: pointer;
-            white-space: nowrap; flex-shrink: 0; /* 折り返し防止 */
+            background: #636e72; 
+            color: #fff; 
+            border: none; 
+            padding: 0 20px; 
+            border-radius: 6px; 
+            cursor: pointer;
+            
+            /* ▼▼▼ 追加設定 ▼▼▼ */
+            white-space: nowrap; /* 文字を折り返さない */
+            flex-shrink: 0;      /* 横幅が狭くなってもボタンを縮めない */
         }
-        
-        .total-row { display: flex; justify-content: space-between; align-items: flex-end; font-size: 1.2rem; }
-        .total-price { font-size: 2rem; font-weight: bold; color: #55efc4; }
-        .discount-info { font-size: 0.9rem; color: #b2bec3; margin-left: 10px; }
-        
-        .error-msg { color: #ff7675; font-size: 0.9rem; margin-top: 10px; display: none; font-weight: bold; }
+
+        /* エラーメッセージ */
+        .error-msg { color: #ff7675; font-size: 0.9rem; text-align: center; margin-top: 10px; display: none; font-weight: bold; }
 
         /* ナビゲーションボタン */
         .nav-area { display: flex; justify-content: center; gap: 20px; padding: 30px; border-top: 1px solid #eee; }
@@ -94,6 +97,32 @@
         .btn-next { background: #2d3436; color: #fff; }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+
+        /* --- ★修正: 画面下部固定フッター --- */
+        .fixed-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #2d3436; /* ダークグレー */
+            color: #fff;
+            padding: 15px 20px;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none; /* 初期状態は非表示(Step3で表示) */
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+        }
+        
+        .footer-total { font-size: 1rem; display: flex; flex-direction: column; align-items: flex-start; }
+        .footer-price { font-size: 1.8rem; font-weight: bold; color: #55efc4; }
+        .footer-discount { font-size: 0.8rem; color: #b2bec3; }
+        
+        .footer-actions { display: flex; gap: 15px; }
+        .btn-footer-back { background: #636e72; color: #fff; }
+        .btn-footer-submit { background: #00b894; color: #fff; font-size: 1.1rem; padding: 12px 50px; }
+        .btn-footer-submit:hover:not(:disabled) { background: #00a884; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,255,170,0.3); }
 
     </style>
 </head>
@@ -178,27 +207,29 @@
                 <!-- JSで動的にフォーム生成 -->
             </div>
 
-            <div class="summary-area">
+            <!-- クーポンエリア（スクロール内） -->
+            <div class="coupon-area">
                 <div class="coupon-row">
                     <input type="text" id="couponInput" placeholder="クーポンコードをお持ちの方はこちら">
                     <button class="coupon-btn" onclick="calcTotal()">適用</button>
                 </div>
-                <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin: 20px 0;">
-                
-                <div class="total-row">
-                    <span>お支払い合計</span>
-                    <div>
-                        <span class="total-price" id="totalPriceDisplay">¥0</span>
-                        <span class="discount-info" id="discountDisplay"></span>
-                    </div>
-                </div>
                 <div class="error-msg" id="errorMsg"></div>
             </div>
+            
+            <!-- 通常のナビゲーションは隠す（フッターに出すため） -->
+        </div>
+    </div>
 
-            <div class="nav-area">
-                <button class="btn btn-prev" onclick="goStep(2)">前の画面に戻る</button>
-                <button class="btn btn-next" id="btnSubmit" onclick="submitOrder()">予約確定</button>
-            </div>
+    <!-- ★修正: 画面下部固定フッター (STEP3用) -->
+    <div id="fixedFooter" class="fixed-footer">
+        <div class="footer-total">
+            <span>お支払い合計</span>
+            <span class="footer-price" id="totalPriceDisplay">¥0</span>
+            <span class="footer-discount" id="discountDisplay"></span>
+        </div>
+        <div class="footer-actions">
+            <button class="btn btn-footer-back" onclick="goStep(2)">戻る</button>
+            <button class="btn btn-footer-submit" id="btnSubmit" onclick="submitOrder()">予約確定</button>
         </div>
     </div>
 
@@ -364,6 +395,14 @@
                 bookingData.needFormUpdate = false;
             }
 
+            // フッター表示制御
+            const footer = document.getElementById('fixedFooter');
+            if (step === 3) {
+                footer.style.display = 'flex';
+            } else {
+                footer.style.display = 'none';
+            }
+
             document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
             document.getElementById('step' + step).classList.add('active');
         }
@@ -448,7 +487,7 @@
                          discountBox.innerText = "";
                     }
                     btn.disabled = false;
-                    btn.style.backgroundColor = "#2d3436";
+                    btn.style.backgroundColor = "#00b894";
                 }
 
             } catch (e) {
