@@ -25,17 +25,30 @@
 
         /* --- STEP 1: 日時選択 --- */
         .calendar-wrapper { margin-bottom: 30px; background: #f9f9f9; padding: 20px; border-radius: 8px; }
-        .calendar-header { text-align: center; margin-bottom: 15px; font-weight: bold; }
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-weight: bold; font-size: 1.1rem; }
+        
+        .cal-nav-btn { background: none; border: 1px solid #ddd; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; color: #555; display: flex; justify-content: center; align-items: center; transition: 0.2s; }
+        .cal-nav-btn:hover:not(:disabled) { background-color: #333; color: #fff; border-color: #333; }
+        .cal-nav-btn:disabled { opacity: 0.3; cursor: not-allowed; background: none; color: #ccc; border-color: #eee; }
+
+        .calendar-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 0.85rem; color: #666; margin-bottom: 5px; font-weight: bold; }
+        .weekday:first-child { color: #e74c3c; }
+        .weekday:last-child { color: #3498db; }
+
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; }
-        .cal-cell { padding: 10px; border-radius: 4px; cursor: pointer; transition: 0.2s; }
-        .cal-cell:hover:not(.empty) { background: #e0e0e0; }
+        .cal-cell { padding: 10px; border-radius: 4px; cursor: pointer; transition: 0.2s; position: relative; }
+        .cal-cell:hover:not(.empty):not(.disabled) { background: #e0e0e0; }
         .cal-cell.selected { background: #333; color: #fff; }
+        .cal-cell.disabled { background: #eee; color: #bbb; cursor: not-allowed; pointer-events: none; }
         .cal-cell.empty { cursor: default; }
 
         .time-list { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
-        .time-btn { padding: 15px 30px; border: 2px solid #ddd; background: #fff; border-radius: 8px; cursor: pointer; font-size: 1.1rem; transition: 0.2s; }
+        .time-btn { display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100px; height: 80px; border: 2px solid #ddd; background: #fff; border-radius: 8px; cursor: pointer; transition: 0.2s; }
         .time-btn:hover { border-color: #999; }
-        .time-btn.selected { border-color: #007bff; color: #007bff; background: #e6f0ff; font-weight: bold; }
+        .time-btn.selected { border-color: #007bff; color: #007bff; background: #e6f0ff; }
+        .t-start { font-size: 1.2rem; font-weight: bold; line-height: 1.2; }
+        .t-end { font-size: 0.85rem; color: #666; margin-top: 4px; }
+        .time-btn.selected .t-end { color: #007bff; }
 
         /* --- STEP 2: 座席選択 --- */
         .screen { height: 30px; background: #ccc; margin-bottom: 40px; border-radius: 4px; text-align: center; color: #fff; line-height: 30px; font-size: 0.8rem; letter-spacing: 5px; }
@@ -43,28 +56,36 @@
         .seat { aspect-ratio: 1; background: #e0e0e0; border-radius: 6px; cursor: pointer; transition: 0.2s; }
         .seat:hover { background: #d0d0d0; transform: scale(1.05); }
         .seat.selected { background: #4cd137; box-shadow: 0 0 10px rgba(76, 209, 55, 0.4); }
-        .seat-info { text-align: center; margin-top: 20px; min-height: 24px; color: #007bff; font-weight: bold; }
+        
+        .seat-slots-container { display: flex; justify-content: center; gap: 15px; margin-top: 30px; margin-bottom: 20px; }
+        .seat-slot-card { width: 100px; height: 80px; border: 2px solid #ddd; border-radius: 8px; background: #fff; color: #ccc; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1.1rem; transition: 0.2s; }
+        .seat-slot-card.filled { background-color: #4cd137; border-color: #4cd137; color: #fff; box-shadow: 0 4px 10px rgba(76, 209, 55, 0.3); transform: translateY(-2px); }
 
         /* --- STEP 3: 入力 & 計算 --- */
-        .ticket-form-list { display: flex; flex-direction: column; gap: 20px; }
+        .ticket-form-list { display: flex; flex-direction: column; gap: 20px; margin-bottom: 20px; }
         .ticket-card { display: flex; align-items: center; background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 5px solid #4cd137; gap: 20px; }
         .seat-badge { width: 60px; height: 60px; background: #fff; border: 2px solid #4cd137; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1.2rem; color: #4cd137; }
         
         .form-group { flex: 1; }
         .form-row { display: flex; gap: 15px; margin-bottom: 10px; }
         .form-row:last-child { margin-bottom: 0; }
-        
         input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem; box-sizing: border-box; }
         
         /* 合計エリア */
         .summary-area { background: #2d3436; color: #fff; padding: 30px; margin-top: 30px; border-radius: 8px; }
         .coupon-row { display: flex; gap: 10px; margin-bottom: 20px; }
         .coupon-row input { background: #fff; color: #333; border: none; }
-        .coupon-btn { background: #636e72; color: #fff; border: none; padding: 0 20px; border-radius: 6px; cursor: pointer; }
+        
+        .coupon-btn { 
+            background: #636e72; color: #fff; border: none; padding: 0 20px; border-radius: 6px; cursor: pointer;
+            white-space: nowrap; flex-shrink: 0; /* 折り返し防止 */
+        }
         
         .total-row { display: flex; justify-content: space-between; align-items: flex-end; font-size: 1.2rem; }
-        .total-price { font-size: 2rem; font-weight: bold; }
-        .error-msg { color: #ff7675; font-size: 0.9rem; margin-top: 10px; display: none; }
+        .total-price { font-size: 2rem; font-weight: bold; color: #55efc4; }
+        .discount-info { font-size: 0.9rem; color: #b2bec3; margin-left: 10px; }
+        
+        .error-msg { color: #ff7675; font-size: 0.9rem; margin-top: 10px; display: none; font-weight: bold; }
 
         /* ナビゲーションボタン */
         .nav-area { display: flex; justify-content: center; gap: 20px; padding: 30px; border-top: 1px solid #eee; }
@@ -89,7 +110,22 @@
         <div id="step1" class="step-content active">
             <h2>日付をお選びください</h2>
             <div class="calendar-wrapper">
-                <div class="calendar-header" id="calMonth"></div>
+                <div class="calendar-header">
+                    <button class="cal-nav-btn" id="btnPrevMonth" onclick="changeMonth(-1)">&#10094;</button>
+                    <span id="calMonth"></span>
+                    <button class="cal-nav-btn" id="btnNextMonth" onclick="changeMonth(1)">&#10095;</button>
+                </div>
+                
+                <div class="calendar-weekdays">
+                    <div class="weekday">日</div>
+                    <div class="weekday">月</div>
+                    <div class="weekday">火</div>
+                    <div class="weekday">水</div>
+                    <div class="weekday">木</div>
+                    <div class="weekday">金</div>
+                    <div class="weekday">土</div>
+                </div>
+
                 <div class="calendar-grid" id="calGrid">
                     <!-- JSで生成 -->
                 </div>
@@ -97,9 +133,14 @@
 
             <h2>時間をお選びください</h2>
             <div class="time-list">
-                <!-- Pythonから渡されたスケジュールを展開 -->
-                {% for time in movie.schedules %}
-                <div class="time-btn" onclick="selectTime(this, '{{ time }}')">{{ time }}</div>
+                {% for time in movie.start_time %}
+                <div class="time-btn" 
+                     onclick="selectTime(this, '{{ time }}')"
+                     data-start="{{ time }}" 
+                     data-duration="{{ movie.duration }}">
+                    <span class="t-start">{{ time }}</span>
+                    <span class="t-end"></span> 
+                </div>
                 {% endfor %}
             </div>
 
@@ -116,7 +157,12 @@
             <div class="seat-map" id="seatMap">
                 <!-- JSで生成 -->
             </div>
-            <div class="seat-info" id="seatInfo">未選択</div>
+            <div class="seat-slots-container">
+                <div class="seat-slot-card" id="seat-slot-0">未選択</div>
+                <div class="seat-slot-card" id="seat-slot-1">未選択</div>
+                <div class="seat-slot-card" id="seat-slot-2">未選択</div>
+                <div class="seat-slot-card" id="seat-slot-3">未選択</div>
+            </div>
 
             <div class="nav-area">
                 <button class="btn btn-prev" onclick="goStep(1)">前の画面に戻る</button>
@@ -134,12 +180,17 @@
 
             <div class="summary-area">
                 <div class="coupon-row">
-                    <input type="text" id="couponInput" placeholder="クーポンコード">
+                    <input type="text" id="couponInput" placeholder="クーポンコードをお持ちの方はこちら">
                     <button class="coupon-btn" onclick="calcTotal()">適用</button>
                 </div>
+                <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin: 20px 0;">
+                
                 <div class="total-row">
-                    <span>合計</span>
-                    <span class="total-price" id="totalPriceDisplay">¥0</span>
+                    <span>お支払い合計</span>
+                    <div>
+                        <span class="total-price" id="totalPriceDisplay">¥0</span>
+                        <span class="discount-info" id="discountDisplay"></span>
+                    </div>
                 </div>
                 <div class="error-msg" id="errorMsg"></div>
             </div>
@@ -156,7 +207,6 @@
         <input type="hidden" name="movie_id" value="{{ movie.id }}">
         <input type="hidden" name="date" id="postDate">
         <input type="hidden" name="seat" id="postSeat">
-        <!-- 名前、年齢、会員はJSで動的にinputタグを追加して送信します -->
     </form>
 
     <script>
@@ -164,36 +214,71 @@
         let bookingData = {
             date: "",
             time: "",
-            seats: [], // ["A1", "B2"]
-            passengers: [] // {name, age, is_member}
+            seats: [], 
+            passengers: [] 
         };
 
+        // --- カレンダー用状態変数 ---
+        const realToday = new Date(); 
+        let displayYear = realToday.getFullYear(); 
+        let displayMonth = realToday.getMonth();
+        
         // --- 初期化 ---
         window.onload = function() {
             renderCalendar();
             renderSeats();
+            calcEndTimes(); 
         };
-
+        
         // --- STEP 1: カレンダー & 時間 ---
+        function changeMonth(diff) {
+            displayMonth += diff;
+            if (displayMonth > 11) { displayMonth = 0; displayYear++; } 
+            else if (displayMonth < 0) { displayMonth = 11; displayYear--; }
+            renderCalendar();
+        }
+
         function renderCalendar() {
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = today.getMonth();
-            const lastDay = new Date(year, month + 1, 0).getDate();
-            
-            document.getElementById('calMonth').innerText = `${year}年 ${month + 1}月`;
+            document.getElementById('calMonth').innerText = `${displayYear}年 ${displayMonth + 1}月`;
             const grid = document.getElementById('calGrid');
+            grid.innerHTML = ""; 
+
+            const btnPrev = document.getElementById('btnPrevMonth');
+            const isCurrentMonth = (displayYear === realToday.getFullYear() && displayMonth === realToday.getMonth());
             
+            if (displayYear < realToday.getFullYear() || (displayYear === realToday.getFullYear() && displayMonth <= realToday.getMonth())) {
+                 btnPrev.disabled = true;
+            } else {
+                 btnPrev.disabled = false;
+            }
+
+            const firstDayObj = new Date(displayYear, displayMonth, 1);
+            const startDayOfWeek = firstDayObj.getDay(); 
+            const lastDay = new Date(displayYear, displayMonth + 1, 0).getDate();
+
+            for (let i = 0; i < startDayOfWeek; i++) {
+                const emptyDiv = document.createElement('div');
+                emptyDiv.className = 'cal-cell empty';
+                grid.appendChild(emptyDiv);
+            }
+
             for (let i = 1; i <= lastDay; i++) {
                 const d = document.createElement('div');
                 d.className = 'cal-cell';
                 d.innerText = i;
-                d.onclick = function() {
-                    document.querySelectorAll('.cal-cell').forEach(c => c.classList.remove('selected'));
-                    d.classList.add('selected');
-                    bookingData.date = `${year}-${month+1}-${i}`;
-                    checkStep1();
-                };
+
+                if (isCurrentMonth && i < realToday.getDate()) {
+                    d.classList.add('disabled');
+                } else {
+                    d.onclick = function() {
+                        document.querySelectorAll('.cal-cell').forEach(c => c.classList.remove('selected'));
+                        d.classList.add('selected');
+                        const mStr = String(displayMonth + 1).padStart(2, '0');
+                        const dStr = String(i).padStart(2, '0');
+                        bookingData.date = `${displayYear}-${mStr}-${dStr}`;
+                        checkStep1();
+                    };
+                }
                 grid.appendChild(d);
             }
         }
@@ -210,12 +295,28 @@
             btn.disabled = !(bookingData.date && bookingData.time);
         }
 
+        function calcEndTimes() {
+            const btns = document.querySelectorAll('.time-btn');
+            btns.forEach(btn => {
+                const startStr = btn.dataset.start;
+                const duration = parseInt(btn.dataset.duration); 
+                if (!startStr || isNaN(duration)) return;
+                const [h, m] = startStr.split(':').map(Number);
+                const date = new Date();
+                date.setHours(h);
+                date.setMinutes(m + duration);
+                const endH = String(date.getHours()).padStart(2, '0');
+                const endM = String(date.getMinutes()).padStart(2, '0');
+                const endSpan = btn.querySelector('.t-end');
+                endSpan.innerText = `~ ${endH}:${endM}`;
+            });
+        }
+
         // --- STEP 2: 座席 ---
         function renderSeats() {
             const map = document.getElementById('seatMap');
             const rows = ['A', 'B', 'C', 'D'];
             const cols = [1, 2, 3, 4, 5, 6, 7, 8];
-            
             rows.forEach(row => {
                 cols.forEach(col => {
                     const id = row + col;
@@ -229,30 +330,37 @@
 
         function toggleSeat(el, id) {
             if (bookingData.seats.includes(id)) {
-                // 解除
                 bookingData.seats = bookingData.seats.filter(s => s !== id);
                 el.classList.remove('selected');
             } else {
-                // 追加 (最大4席)
                 if (bookingData.seats.length >= 4) return alert("一度に予約できるのは4席までです");
                 bookingData.seats.push(id);
                 el.classList.add('selected');
             }
-            
-            // 表示更新
-            document.getElementById('seatInfo').innerText = bookingData.seats.length > 0 ? bookingData.seats.join(", ") : "未選択";
+            updateSeatCards();
             document.getElementById('btnStep2').disabled = bookingData.seats.length === 0;
-            
-            // フォーム再生成フラグ
             bookingData.needFormUpdate = true;
+        }
+
+        function updateSeatCards() {
+            for (let i = 0; i < 4; i++) {
+                const slot = document.getElementById(`seat-slot-${i}`);
+                const seatId = bookingData.seats[i]; 
+                if (seatId) {
+                    slot.innerText = seatId;
+                    slot.classList.add('filled');
+                } else {
+                    slot.innerText = "未選択";
+                    slot.classList.remove('filled');
+                }
+            }
         }
 
         // --- 画面遷移 ---
         function goStep(step) {
-            // STEP 3に行く直前にフォームを生成
             if (step === 3 && bookingData.needFormUpdate) {
                 renderPassengerForms();
-                calcTotal(); // 初期計算（0円）
+                calcTotal(); 
                 bookingData.needFormUpdate = false;
             }
 
@@ -265,7 +373,7 @@
             const container = document.getElementById('passengerForms');
             container.innerHTML = "";
             
-            bookingData.seats.forEach((seat, index) => {
+            bookingData.seats.forEach((seat) => {
                 const html = `
                 <div class="ticket-card">
                     <div class="seat-badge">${seat}</div>
@@ -288,15 +396,13 @@
 
         // --- API計算 ---
         async function calcTotal() {
-            // データ収集
-            const names = document.querySelectorAll('.inp-name'); // 送信時は使う
+            const names = document.querySelectorAll('.inp-name');
             const ages = document.querySelectorAll('.inp-age');
             const members = document.querySelectorAll('.inp-member');
             const coupon = document.getElementById('couponInput').value;
             
             const ageList = [];
             const memberList = [];
-            
             let allFilled = true;
 
             ages.forEach((el, i) => {
@@ -305,9 +411,8 @@
                 memberList.push(parseInt(members[i].value));
             });
 
-            if (!allFilled) return; // 入力が揃うまで計算しない
+            if (!allFilled) return; 
 
-            // API通信
             try {
                 const res = await fetch('/api/calc', {
                     method: 'POST',
@@ -324,19 +429,23 @@
                 
                 const errorBox = document.getElementById('errorMsg');
                 const priceBox = document.getElementById('totalPriceDisplay');
+                const discountBox = document.getElementById('discountDisplay');
                 const btn = document.getElementById('btnSubmit');
 
                 if (data.status === 'error') {
                     errorBox.innerText = data.message;
                     errorBox.style.display = 'block';
                     priceBox.innerText = "---";
-                    btn.disabled = true; // 予約させない
+                    discountBox.innerText = "";
+                    btn.disabled = true; 
                     btn.style.backgroundColor = "#ccc";
                 } else {
                     errorBox.style.display = 'none';
                     priceBox.innerText = `¥${data.total_price.toLocaleString()}`;
                     if (data.discount > 0) {
-                         priceBox.innerText += ` (値引 -¥${data.discount})`;
+                         discountBox.innerText = `(クーポン値引 -¥${data.discount})`;
+                    } else {
+                         discountBox.innerText = "";
                     }
                     btn.disabled = false;
                     btn.style.backgroundColor = "#2d3436";
@@ -350,17 +459,13 @@
         // --- 送信 ---
         function submitOrder() {
             const form = document.getElementById('finalForm');
-            
-            // 隠しフィールドセット
             document.getElementById('postDate').value = `${bookingData.date} ${bookingData.time}`;
             document.getElementById('postSeat').value = bookingData.seats.join(",");
             
-            // 動的input追加
             const names = document.querySelectorAll('.inp-name');
             const ages = document.querySelectorAll('.inp-age');
             const members = document.querySelectorAll('.inp-member');
             
-            // 名前チェック
             for(let n of names) {
                 if(!n.value) return alert("お名前を入力してください");
             }
@@ -379,7 +484,6 @@
             i.value = value;
             form.appendChild(i);
         }
-
     </script>
 </body>
 </html>
