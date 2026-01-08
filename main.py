@@ -4,9 +4,10 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import csv
 import random
+from typing import List
 
 # 自分の作ったファイルをインポートする
-from models import Ticket,Movie
+from models import Ticket, Movie, Order
 from settings import MOVIES_CSV, PRICES_CSV, SCHEDULES_CSV
 
 app = FastAPI()
@@ -26,13 +27,13 @@ def get_movie_data():
                 image_url = row['image_url'],
             )
             movie_database[ids] = movie
+
     with open(PRICES_CSV, mode='r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
             mid = row['movie_id']
             cat = row['category']
             price = int(row['price'])
-
             movie_database[mid].prices[cat] = price
     return movie_database
     
@@ -66,28 +67,33 @@ def show_result(
     movie_id: str = Form(...),
     date: str = Form(...),
     seat: str = Form(...),
-    name: str = Form(...),
-    age: int = Form(...),
-    is_member: bool = Form(False)
+    names: List[str] = Form(...),
+    ages: List[int] = Form(...),
+    is_members: List[int] = Form(...)
 ):
     movie_db = MOVIE_DB
     watch_movie = movie_db.get(movie_id)
     if not watch_movie:
         return HTMLResponse("エラー", status_code=404)
-    ticket = Ticket(age=age,is_member=is_member,movie=watch_movie,count = 1)
-    fee = ticket.fee_calc()
-    if fee == -1:
-        return HTMLResponse("""
-            <h1>予約エラー</h1>
-            <p>この作品はR-15指定です。15歳未満の方はご鑑賞いただけません。</p>
-            <a href="/">トップに戻る</a>
-        """, status_code=400)
-    else:
-        return templates.TemplateResponse("result.html", {
+    
+    current_order = Order()
+    for name, age, is_member in zip(names, ages, is_members):
+        ticket = Ticket(age=age,is_member=is_member,movie=watch_movie,count = 1)
+        if ticket.fee_calc() == -1:
+            return HTMLResponse("""
+                <h1>予約エラー</h1>
+                <p>この作品はR-15指定です。15歳未満の方はご鑑賞いただけません。</p>
+                <a href="/">トップに戻る</a>
+            """, status_code=400)
+        current_order.add_ticket(ticket)
+    
+    total_fee = current_order.total_price()
+    
+    return templates.TemplateResponse("result.html", {
         "request": request,
-        "name": name,
+        "name": names[0],
         "movie": watch_movie,
         "date": date,
         "seat": seat,
-        "price": fee
+        "price": total_fee
     })

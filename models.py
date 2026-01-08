@@ -13,7 +13,7 @@ class Movie:#値段を持つだけ
         self.prices = {}
     
 class Ticket:
-    def __init__(self, age: int, is_member: bool, movie: Movie, count: int = 1):
+    def __init__(self, age: int, is_member: int, movie: Movie, count: int = 1):
         self.age = age
         self.is_member = is_member
         self.movie = movie
@@ -54,3 +54,26 @@ class Ticket:
         if self.count % 10 == 0:
             fee = max(fee - DISCOUNT , 0)
         return fee
+
+class Order:
+    def __init__(self):
+        self.tickets = []
+        self.discount = 0
+
+    def add_ticket(self, ticket: Ticket):
+        if len(self.tickets) >= 4:
+            raise ValueError("4枚までです")
+        self.tickets.append(ticket)
+    
+    def total_price(self):
+        total = 0
+        for tiket in self.tickets:
+            total += tiket.fee_calc()
+        return total
+    
+    def set_coupon(self, discount: int):
+        self.discount = discount
+    
+    def apply_coupon(self, discount: int):
+        total = self.total_price()
+        return max(total - self.discount, 0)
