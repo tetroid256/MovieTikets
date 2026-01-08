@@ -25,6 +25,7 @@ def get_movie_data():
                 id = ids,
                 title = row['title'],
                 image_url = row['image_url'],
+                duration = int(row['duration']),
             )
             movie_database[ids] = movie
 
@@ -35,6 +36,15 @@ def get_movie_data():
             cat = row['category']
             price = int(row['price'])
             movie_database[mid].prices[cat] = price
+
+    with open(SCHEDULES_CSV, mode='r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            mid = row['movie_id']
+            start_time = row['start_time']
+            if mid in movie_database:
+                movie_database[mid].start_time.append(start_time)
+
     return movie_database
     
 MOVIE_DB = get_movie_data()
@@ -61,6 +71,45 @@ def get_booking_page(request: Request, movie_id: str):
         "movie": movie
     })
 
+
+from pydantic import BaseModel # 追加インポート
+
+# APIが受け取るデータの設計図
+class CalcRequest(BaseModel):
+    movie_id: str
+    ages: List[int]
+    is_members: List[int]
+    coupon_code: str = "" # クーポンは必須じゃないのでデフォルト空文字
+
+@app.post("/api/calc")
+def calculate_price_api(data: CalcRequest):
+    movie = MOVIE_DB.get(data.movie_id)
+    if not movie:
+        return {"status": "error", "message": "映画が見つかりません"}
+    current_order = Order()
+
+    for age, is_member_int in zip(data.ages, data.is_members):
+        is_member_bool = (is_member_int == 1)
+        ticket = Ticket(age=age, is_member=is_member_bool, movie=movie)
+        fee = ticket.fee_calc()
+        if fee == -1:
+            return {
+                "status": "error", 
+                "message": "R-15指定作品のため、対象年齢未満の方は購入できません"
+            }
+        
+        current_order.add_ticket(ticket)
+
+    import settings 
+    discount_amount = settings.COUPONS.get(data.coupon_code, 0)
+    current_order.set_coupon(discount_amount)
+
+    return {
+        "status": "ok",
+        "total_price": current_order.total_price(),
+        "discount": discount_amount
+    }
+
 @app.post("/result", response_class=HTMLResponse)
 def show_result(
     request: Request,
@@ -77,7 +126,7 @@ def show_result(
         return HTMLResponse("エラー", status_code=404)
     
     current_order = Order()
-    for name, age, is_member in zip(names, ages, is_members):
+    for age, is_member in zip(ages, is_members):
         ticket = Ticket(age=age,is_member=is_member,movie=watch_movie,count = 1)
         if ticket.fee_calc() == -1:
             return HTMLResponse("""

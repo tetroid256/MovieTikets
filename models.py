@@ -5,12 +5,15 @@ class Movie:#値段を持つだけ
         id: str,
         title: str,
         image_url: str,
+        duration: int,
     ):
         #self.id = id,？？？ここにカンマ置いたやつ絶対に許さない。
         self.id = id
         self.title = title
         self.image_url = image_url
         self.prices = {}
+        self.duration = duration
+        self.start_time = []
     
 class Ticket:
     def __init__(self, age: int, is_member: int, movie: Movie, count: int = 1):

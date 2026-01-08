@@ -1,16 +1,16 @@
-movie_id,title,image_url
-1,バレット・ストーム,/static/images/poster/BulletStorm.png
-2,呪われた廃校舎,/static/images/poster/CursedSchool.png
-3,君と見た最後の雪,/static/images/poster/LastSnow.png
-4,わんわん大冒険！,/static/images/poster/PawsPlay.png
-5,劇場版 蒼空のガーディアン,/static/images/poster/SkyGuardian.png
-6,トライヘッド・シャークVSペイル・ホエール,/static/images/poster/TriPale.png
-7,ギャラクシー・ウォー：星々の記憶,/static/images/poster/GalaxyWar.png
-8,霧のロンドン殺人事件,/static/images/poster/FogLondon.png
-9,大自然の奇跡：生命の旅,/static/images/poster/LifeOdyssey.png
-10,将軍の刀,/static/images/poster/ShogunBlade.png
-11,歌姫の夢舞台,/static/images/poster/DivaStage.png
-12,昭和ノスタルジア（デジタルリマスター）,/static/images/poster/ShowaNostalgia.png
-13,呪殺村の惨劇【R15+】,/static/images/poster/VillageHorror.png
-14,キリング・ゲーム：生存率0%【R15+】,/static/images/poster/KillingGame.png
-15,禁断の果実：背徳の愛【R15+】,/static/images/poster/ForbiddenFruit.png
+movie_id,title,image_url,duration
+1,バレット・ストーム,/static/images/poster/BulletStorm.png,120
+2,呪われた廃校舎,/static/images/poster/CursedSchool.png,105
+3,君と見た最後の雪,/static/images/poster/LastSnow.png,118
+4,わんわん大冒険！,/static/images/poster/PawsPlay.png,90
+5,劇場版 蒼空のガーディアン,/static/images/poster/SkyGuardian.png,115
+6,トライヘッド・シャークVSペイル・ホエール,/static/images/poster/TriPale.png,95
+7,ギャラクシー・ウォー：星々の記憶,/static/images/poster/GalaxyWar.png,145
+8,霧のロンドン殺人事件,/static/images/poster/FogLondon.png,125
+9,大自然の奇跡：生命の旅,/static/images/poster/LifeOdyssey.png,100
+10,将軍の刀,/static/images/poster/ShogunBlade.png,130
+11,歌姫の夢舞台,/static/images/poster/DivaStage.png,120
+12,昭和ノスタルジア（デジタルリマスター）,/static/images/poster/ShowaNostalgia.png,110
+13,呪殺村の惨劇【R15+】,/static/images/poster/VillageHorror.png,105
+14,キリング・ゲーム：生存率0%【R15+】,/static/images/poster/KillingGame.png,112
+15,禁断の果実：背徳の愛【R15+】,/static/images/poster/ForbiddenFruit.png,118
