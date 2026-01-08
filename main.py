@@ -7,6 +7,7 @@ import random
 
 # 自分の作ったファイルをインポートする
 from models import Ticket,Movie
+from settings import MOVIES_CSV, PRICES_CSV, SCHEDULES_CSV
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -14,7 +15,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 def get_movie_data():
     # encoding='utf-8' は日本語を含む場合に必須
-    with open('movies.csv', mode='r', encoding='utf-8') as f:
+    with open(MOVIES_CSV, mode='r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         movie_database = {}
         for row in reader:
@@ -25,7 +26,7 @@ def get_movie_data():
                 image_url = row['image_url'],
             )
             movie_database[ids] = movie
-    with open('prices.csv', mode='r', encoding='utf-8') as f:
+    with open(PRICES_CSV, mode='r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
             mid = row['movie_id']

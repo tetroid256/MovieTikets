@@ -7,7 +7,6 @@ __pycache__/
 .docker/
 node_modules/
 # もしコンテナ内でデータを保存する設定（volumes）にしている場合
-data/
 db_data/
 *.log
 # めも
