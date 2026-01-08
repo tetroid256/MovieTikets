@@ -22,8 +22,6 @@
 15歳未満のR-15映画の視聴を拒否するタイミングが遅い。resultに遷移する前に教えてほしい。
 <br>
 ユーザ情報の保存をしてほしい。そのうえでcsvはセキュリティとか同時の書き込みとかに不安があるのでちゃんとしたDB(SQL使うとか)にしてほしい。
-<br>
-csv使うにしてもMovie型の柔軟性が足りないので、なんとかするべき。
 
 
 3. 生成AIに書いてもらって、自分では思いつかなかったコードについて。どこが参考になったか※100文字以上
@@ -121,12 +119,17 @@ MovieTikets/
 │   └── ressult.html     # 結果表示 
 ├── docker-compose.yml   # コンテナ起動設定
 ├── Dockerfile           # 環境構築設定
-├── static/images        # 画像置き
+├── static/              # 静的ファイル
+│   ├── images           # 画像置き
+│   ├── css/booking.css  # 予約画面分割
+│   └── js/booking.js    # 予約画面分割
 ├── main.py              # バックエンド
 ├── models.py            # クラス
 ├── settings.py          # 変数置くとこ
-├── movies.csv           # 映画管理
-├── prices.csv           # 料金管理
+├── data/                # CSVファイル
+│   ├── movies.csv       # 映画管理
+│   ├── prices.csv       # 料金管理
+│   └── schedule.csv     # 放送時間管理
 ├── requirements.txt     # ライブラリ一覧
 └── README.md            # 説明書
 ```
