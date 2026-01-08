@@ -358,6 +358,7 @@
 
         // --- 画面遷移 ---
         function goStep(step) {
+            // STEP 3に行く直前にフォームを生成
             if (step === 3 && bookingData.needFormUpdate) {
                 renderPassengerForms();
                 calcTotal(); 
@@ -366,6 +367,9 @@
 
             document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
             document.getElementById('step' + step).classList.add('active');
+
+            // ★追加: 画面のトップへスクロールする
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // --- STEP 3: フォーム生成 ---
