@@ -66,6 +66,12 @@ h2 { text-align: center; margin-bottom: 30px; font-size: 1.1rem; color: #555; }
 input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem; box-sizing: border-box; }
 
 /* 合計エリア */
+.subtotal-price {
+    font-size: 1rem;
+    color: #b2bec3;           /* 薄いグレー */
+    text-decoration: line-through; /* 取り消し線 */
+    margin-bottom: -5px;      /* 下の金額との隙間を詰める */
+}
 .summary-area { background: #2d3436; color: #fff; padding: 30px; margin-top: 30px; border-radius: 8px; }
 .coupon-row { display: flex; gap: 10px; margin-bottom: 20px; }
 .coupon-row input { background: #fff; color: #333; border: none; }

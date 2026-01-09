@@ -106,7 +106,8 @@ def calculate_price_api(data: CalcRequest):
 
     return {
         "status": "ok",
-        "total_price": current_order.total_price(),
+        "subtotal": current_order.get_subtotal(),
+        "total_price": current_order.get_total_price(),
         "discount": discount_amount
     }
 
@@ -118,7 +119,8 @@ def show_result(
     seat: str = Form(...),
     names: List[str] = Form(...),
     ages: List[int] = Form(...),
-    is_members: List[int] = Form(...)
+    is_members: List[int] = Form(...),
+    coupon_code: str = Form(""),
 ):
     movie_db = MOVIE_DB
     watch_movie = movie_db.get(movie_id)
@@ -148,8 +150,8 @@ def show_result(
 
     total_fee = current_order.total_price()
 
-    discount = 0 
-    current_order.set_coupon(discount)
+    import settings
+    discount = settings.COUPONS.get(coupon_code, 0)
     total_fee = current_order.get_total_price()
 
     return templates.TemplateResponse("result.html", {

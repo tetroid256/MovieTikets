@@ -26,39 +26,87 @@
         h1 { color: #2d3436; margin-bottom: 10px; }
         .subtitle { color: #636e72; margin-bottom: 30px; }
 
+        /* 映画情報エリア */
         .movie-info {
             border-bottom: 2px dashed #dfe6e9;
             padding-bottom: 20px;
             margin-bottom: 20px;
         }
-
         .poster-img {
             width: 140px;
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            margin-bottom: 10px;
         }
+        .movie-title { margin: 10px 0 5px; font-size: 1.5rem; }
+        .watch-date { font-size: 1.1rem; color: #00b894; font-weight: bold; }
 
+        /* 詳細情報エリア */
         .details-box {
             text-align: left;
             background-color: #fafafa;
-            padding: 20px 40px;
+            padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
-            line-height: 2.2;
+        }
+        .seat-info {
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        /* チケットリスト */
+        .ticket-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .ticket-item:last-child { border-bottom: none; }
+        
+        .ticket-user { display: flex; align-items: center; gap: 8px; }
+        .user-name { font-weight: bold; }
+        
+        .badge-member {
+            background-color: #6c5ce7;
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
         }
 
-        .label { color: #636e72; font-weight: bold; margin-right: 10px; }
+        .ticket-detail { text-align: right; }
+        .ticket-type { font-size: 0.85rem; color: #636e72; display: block; }
+        .ticket-price { font-weight: bold; }
 
+        /* 金額エリア */
         .price-area {
-            background-color: #ffeaa7;
-            color: #d63031;
-            padding: 15px;
+            background-color: #fff;
+            border: 2px solid #ffeaa7;
+            padding: 20px;
             border-radius: 8px;
             margin-top: 20px;
         }
-        
-        .price-label { font-size: 14px; color: #2d3436; font-weight: bold; }
-        .price-value { font-size: 32px; font-weight: bold; }
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            color: #636e72;
+        }
+        .price-row.discount { color: #d63031; }
+        .price-row.total {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            color: #2d3436;
+            align-items: flex-end;
+        }
+        .total-label { font-weight: bold; }
+        .total-value { font-size: 2rem; font-weight: bold; color: #d63031; line-height: 1; }
 
         .home-btn {
             display: inline-block;
@@ -84,20 +132,55 @@
         <p class="subtitle">ご来場をお待ちしております。</p>
 
         <div class="movie-info">
-            <!-- main.py から渡された movie オブジェクトを使用 -->
             <img src="{{ movie.image_url }}" alt="ポスター" class="poster-img">
-            <h2>{{ movie.title }}</h2>
+            <h2 class="movie-title">{{ movie.title }}</h2>
+            <!-- 追加: 鑑賞日時 -->
+            <div class="watch-date">鑑賞日時: {{ date }}</div>
         </div>
 
         <div class="details-box">
-            <div><span class="label">お名前:</span> {{ name }} 様</div>
-            <div><span class="label">鑑賞日:</span> {{ date }}</div>
-            <div><span class="label">座席:</span> {{ seat }}</div>
+            <div class="seat-info">座席: {{ seat }}</div>
+            
+            <!-- 追加: チケット詳細のループ表示 -->
+            <!-- バックエンドから ticket_details というリストをもらう想定 -->
+            {% for ticket in ticket_details %}
+            <div class="ticket-item">
+                <div class="ticket-user">
+                    <span class="user-name">{{ ticket.name }} 様</span>
+                    {% if ticket.is_member %}
+                    <span class="badge-member">会員</span>
+                    {% endif %}
+                </div>
+                <div class="ticket-detail">
+                    <!-- 大人/子供などの区分 -->
+                    <span class="ticket-type">{{ ticket.type_label }}</span>
+                    <!-- 単価 -->
+                    <span class="ticket-price">¥{{ ticket.price }}</span>
+                </div>
+            </div>
+            {% endfor %}
         </div>
 
         <div class="price-area">
-            <div class="price-label">お支払い金額</div>
-            <div class="price-value">¥{{ price }}</div>
+            <!-- 追加: 小計 -->
+            <div class="price-row">
+                <span>小計</span>
+                <span>¥{{ subtotal }}</span>
+            </div>
+            
+            <!-- 追加: 割引額（割引がある時だけ表示） -->
+            {% if discount > 0 %}
+            <div class="price-row discount">
+                <span>割引（会員・クーポン）</span>
+                <span>-¥{{ discount }}</span>
+            </div>
+            {% endif %}
+
+            <!-- 合計 -->
+            <div class="price-row total">
+                <span class="total-label">お支払い合計</span>
+                <span class="total-value">¥{{ total_price }}</span>
+            </div>
         </div>
 
         <a href="/" class="home-btn">トップページに戻る</a>

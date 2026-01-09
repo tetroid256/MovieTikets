@@ -96,9 +96,13 @@
                 
                 <div class="total-row">
                     <span>お支払い合計</span>
-                    <div>
-                        <span class="total-price" id="totalPriceDisplay">¥0</span>
-                        <span class="discount-info" id="discountDisplay"></span>
+                    <div style="text-align: right;">
+                        <!-- 小計（割引前）: 最初は隠しておく -->
+                        <div class="subtotal-price" id="subtotalDisplay" style="display:none;"></div>
+                        <!-- 最終金額 -->
+                        <div class="total-price" id="totalPriceDisplay">¥0</div>
+                        <!-- クーポン情報 -->
+                        <div class="discount-info" id="discountDisplay"></div>
                     </div>
                 </div>
                 <div class="error-msg" id="errorMsg"></div>
@@ -116,6 +120,7 @@
         <input type="hidden" name="movie_id" value="{{ movie.id }}">
         <input type="hidden" name="date" id="postDate">
         <input type="hidden" name="seat" id="postSeat">
+        <input type="hidden" name="coupon_code" id="postCoupon">
     </form>
 
     <script>

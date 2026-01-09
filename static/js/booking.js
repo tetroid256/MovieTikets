@@ -222,6 +222,7 @@ async function calcTotal() {
         
         const errorBox = document.getElementById('errorMsg');
         const priceBox = document.getElementById('totalPriceDisplay');
+        const subtotalBox = document.getElementById('subtotalDisplay');
         const discountBox = document.getElementById('discountDisplay');
         const btn = document.getElementById('btnSubmit');
 
@@ -229,6 +230,7 @@ async function calcTotal() {
             errorBox.innerText = data.message;
             errorBox.style.display = 'block';
             priceBox.innerText = "---";
+            subtotalBox.style.display = 'none'; 
             discountBox.innerText = "";
             btn.disabled = true; 
             btn.style.backgroundColor = "#ccc";
@@ -236,12 +238,18 @@ async function calcTotal() {
             errorBox.style.display = 'none';
             priceBox.innerText = `¥${data.total_price.toLocaleString()}`;
             if (data.discount > 0) {
-                    discountBox.innerText = `(クーポン値引 -¥${data.discount})`;
+                subtotalBox.innerText = `¥${data.subtotal.toLocaleString()}`;
+                subtotalBox.style.display = 'block'; 
+                discountBox.innerText = `(クーポン適用 -¥${data.discount})`;
             } else {
-                    discountBox.innerText = "";
+                subtotalBox.style.display = 'none'; 
+                discountBox.innerText = "";
             }
+
             btn.disabled = false;
-            btn.style.backgroundColor = "#2d3436";
+            btn.style.backgroundColor = "#2d3436"; 
+            const footerPrice = document.querySelector('#fixedFooter .footer-price');
+            if(footerPrice) footerPrice.innerText = `¥${data.total_price.toLocaleString()}`;
         }
 
     } catch (e) {
@@ -258,6 +266,8 @@ function submitOrder() {
     const names = document.querySelectorAll('.inp-name');
     const ages = document.querySelectorAll('.inp-age');
     const members = document.querySelectorAll('.inp-member');
+    const couponValue = document.getElementById('couponInput').value;
+    document.getElementById('postCoupon').value = couponValue;
     
     for(let n of names) {
         if(!n.value) return alert("お名前を入力してください");
