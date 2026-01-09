@@ -57,6 +57,14 @@ class Ticket:
         if self.count % 10 == 0:
             fee = max(fee - DISCOUNT , 0)
         return fee
+    
+    def get_type_label(self):
+        BABY, KIDS, TEEN, SENIOR = settings.BABY, settings.KIDS, settings.TEEN, settings.SENIOR
+        if self.age < BABY: return "幼児"
+        if self.age < KIDS: return "小学生"
+        if self.age < TEEN: return "中高生"
+        if self.age >= SENIOR: return "シニア"
+        return "一般"
 
 class Order:
     def __init__(self):
@@ -77,6 +85,15 @@ class Order:
     def set_coupon(self, discount: int):
         self.discount = discount
     
-    def apply_coupon(self, discount: int):
+    def apply_coupon(self):
         total = self.total_price()
         return max(total - self.discount, 0)
+    
+    def get_subtotal(self):
+        total = 0
+        for ticket in self.tickets:
+            total += ticket.fee_calc()
+        return total
+    
+    def get_total_price(self):
+        return max(self.get_subtotal() - self.discount, 0)

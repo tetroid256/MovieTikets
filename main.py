@@ -5,6 +5,9 @@ from fastapi.staticfiles import StaticFiles
 import csv
 import random
 from typing import List
+from pydantic import BaseModel
+import uuid
+import datetime
 
 # 自分の作ったファイルをインポートする
 from models import Ticket, Movie, Order
@@ -71,9 +74,6 @@ def get_booking_page(request: Request, movie_id: str):
         "movie": movie
     })
 
-
-from pydantic import BaseModel # 追加インポート
-
 # APIが受け取るデータの設計図
 class CalcRequest(BaseModel):
     movie_id: str
@@ -126,23 +126,41 @@ def show_result(
         return HTMLResponse("エラー", status_code=404)
     
     current_order = Order()
-    for age, is_member in zip(ages, is_members):
-        ticket = Ticket(age=age,is_member=is_member,movie=watch_movie,count = 1)
+    ticket_details = []
+
+    for name, age, is_member_int in zip(names, ages, is_members):
+        is_member_bool = (is_member_int == 1)
+        ticket = Ticket(age=age, is_member=is_member_bool, movie=watch_movie)
+        
         if ticket.fee_calc() == -1:
-            return HTMLResponse("""
-                <h1>予約エラー</h1>
-                <p>この作品はR-15指定です。15歳未満の方はご鑑賞いただけません。</p>
-                <a href="/">トップに戻る</a>
-            """, status_code=400)
+            return HTMLResponse("R-15エラー", status_code=400)
+        
         current_order.add_ticket(ticket)
-    
+
+        ticket_details.append({
+            "name": name,
+            "type_label": ticket.get_type_label(),
+            "price": ticket.fee_calc(),
+            "is_member": is_member_bool
+        })
+
+    subtotal = current_order.get_subtotal()
+
     total_fee = current_order.total_price()
-    
+
+    discount = 0 
+    current_order.set_coupon(discount)
+    total_fee = current_order.get_total_price()
+
     return templates.TemplateResponse("result.html", {
         "request": request,
         "name": names[0],
         "movie": watch_movie,
         "date": date,
         "seat": seat,
-        "price": total_fee
-    })
+        "price": total_fee,
+        "ticket_details": ticket_details,
+        "subtotal": subtotal,
+        "discount": discount,
+        "total_price": total_fee
+})
