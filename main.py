@@ -146,13 +146,12 @@ def show_result(
             "is_member": is_member_bool
         })
 
-    subtotal = current_order.get_subtotal()
-
-    total_fee = current_order.total_price()
-
     import settings
     discount = settings.COUPONS.get(coupon_code, 0)
+    current_order.set_coupon(discount)
+    subtotal = current_order.get_subtotal()
     total_fee = current_order.get_total_price()
+    print(f"{subtotal},{total_fee}")
 
     return templates.TemplateResponse("result.html", {
         "request": request,
@@ -160,7 +159,6 @@ def show_result(
         "movie": watch_movie,
         "date": date,
         "seat": seat,
-        "price": total_fee,
         "ticket_details": ticket_details,
         "subtotal": subtotal,
         "discount": discount,

@@ -193,6 +193,10 @@ async function calcTotal() {
     const ages = document.querySelectorAll('.inp-age');
     const members = document.querySelectorAll('.inp-member');
     const coupon = document.getElementById('couponInput').value;
+    const postCoupon = document.getElementById('postCoupon');
+    if (postCoupon) {
+        postCoupon.value = coupon;
+    }
     
     const ageList = [];
     const memberList = [];
@@ -259,6 +263,7 @@ async function calcTotal() {
 
 // --- 送信 ---
 function submitOrder() {
+    alert("送信ボタンが押されました！");
     const form = document.getElementById('finalForm');
     document.getElementById('postDate').value = `${bookingData.date} ${bookingData.time}`;
     document.getElementById('postSeat').value = bookingData.seats.join(",");
@@ -267,6 +272,7 @@ function submitOrder() {
     const ages = document.querySelectorAll('.inp-age');
     const members = document.querySelectorAll('.inp-member');
     const couponValue = document.getElementById('couponInput').value;
+        console.log("送信するクーポン:", couponValue); 
     document.getElementById('postCoupon').value = couponValue;
     
     for(let n of names) {
