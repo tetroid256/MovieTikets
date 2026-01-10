@@ -10,8 +10,6 @@ class Movie(BaseModel):
     
     prices: Dict[str, int] = Field(default_factory=dict)
     start_time: List[str] = Field(default_factory=list)
-    #self.id = id,？？？ここにカンマ置いたやつ絶対に許さない。
-    #過去の私にさようなら。
     
 class Ticket:
     def __init__(self, age: int, is_member: int, movie: Movie, count: int = 1):
