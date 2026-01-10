@@ -1,0 +1,169 @@
+
+        /* --- 基本設定 --- */
+        body {
+            margin: 0;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            background-color: #fff;
+            color: #333;
+        }
+
+        /* --- ヘッダー --- */
+        header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .user-icon {
+            width: 32px;
+            height: 32px;
+            background-color: #333;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* --- ヒーローエリア（カルーセル） --- */
+        .hero-section {
+            background-color: #f0f2f5;
+            /* 高さを固定してグレー領域を安定させる */
+            height: 400px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* はみ出し防止 */
+            overflow: hidden;
+        }
+
+        .carousel-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .carousel-track {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* カード配置のための幅確保 */
+            min-width: 600px; 
+        }
+
+        .movie-card {
+            /* 通常時（左右のカード） */
+            width: 160px;
+            height: 220px;
+            background-color: #e0e0e0;
+            border-radius: 8px;
+            display: none; /* JSで制御 */
+            justify-content: center;
+            align-items: center;
+            margin: 0 15px;
+            transition: all 0.3s ease-in-out;
+            opacity: 0.6;
+            transform: scale(0.9);
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* 中央のカード（アクティブ） */
+        .movie-card.active {
+            /* 大きくする */
+            width: 200px;
+            height: 280px;
+            opacity: 1;
+            transform: scale(1.0); /* scaleでの拡大をやめ、width/heightで実サイズ変更 */
+            background-color: #d0d0d0;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            z-index: 2;
+            cursor: default;
+        }
+
+        .movie-card:hover,
+        .movie-card.active:hover {
+            transform: scale(1.1) rotate(3deg);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+            z-index: 100;
+            filter: brightness(1.1);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .nav-btn {
+            background-color: rgba(255,255,255,0.6);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: 0.2s;
+        }
+        .nav-btn:hover {
+            background-color: rgba(255,255,255,1);
+            transform: scale(1.1);
+        }
+
+        /* --- おすすめセクション --- */
+        .recommend-section {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .recommend-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            background-color: #f5f6fa;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        .recommend-card {
+            background-color: #e0e0e0;
+            width: 160px; 
+            height: 220px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #999;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .recommend-card:hover {
+            transform: translateY(-10px) scale(1.05) rotate(-2deg);
+            background-color: #d4d4d4;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
