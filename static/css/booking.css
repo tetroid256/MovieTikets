@@ -73,12 +73,12 @@ input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radiu
     margin-bottom: -5px;      /* 下の金額との隙間を詰める */
 }
 .summary-area { background: #2d3436; color: #fff; padding: 30px; margin-top: 30px; border-radius: 8px; }
-.coupon-row { display: flex; gap: 10px; margin-bottom: 20px; }
+.coupon-row { display: flex; gap: 10px; margin-bottom: 20px; align-items: flex-start; }
 .coupon-row input { background: #fff; color: #333; border: none; }
 
 .coupon-btn { 
     background: #636e72; color: #fff; border: none; padding: 0 20px; border-radius: 6px; cursor: pointer;
-    white-space: nowrap; flex-shrink: 0; /* 折り返し防止 */
+    white-space: nowrap; flex-shrink: 0; /* 折り返し防止 */padding: 10px 20px;
 }
 
 .total-row { display: flex; justify-content: space-between; align-items: flex-end; font-size: 1.2rem; }
@@ -142,6 +142,19 @@ input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radiu
     background-color: #f0fffa !important; /* 薄い緑の背景 */
     box-shadow: 0 0 0 3px rgba(0, 184, 148, 0.2); /* ぼわっと光らせる */
     transition: all 0.3s ease;
+}
+
+.field-success-text {
+    color: #00b894; /* ミントグリーン */
+    font-size: 0.8rem;
+    margin-top: 4px;
+    font-weight: bold;
+    display: none; /* 通常は非表示 */
+}
+
+/* 表示用クラス */
+.field-success-text.show {
+    display: block;
 }
 
 /* --- バリデーションエラー用 --- */

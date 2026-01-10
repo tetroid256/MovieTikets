@@ -89,7 +89,11 @@
 
             <div class="summary-area">
                 <div class="coupon-row">
-                    <input type="text" id="couponInput" placeholder="クーポンコードをお持ちの方はこちら">
+                    <div class="input-wrapper" style="flex: 1;">
+                        <input type="text" id="couponInput" placeholder="クーポンコードをお持ちの方はこちら">
+                        <!-- ★追加: 成功メッセージ（最初は隠す） -->
+                        <div id="couponSuccessMsg" class="field-success-text">クーポンを適用しました</div>
+                    </div>
                     <button class="coupon-btn" onclick="calcTotal()">適用</button>
                 </div>
                 <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin: 20px 0;">

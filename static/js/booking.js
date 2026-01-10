@@ -247,6 +247,8 @@ async function calcTotal() {
         const subtotalBox = document.getElementById('subtotalDisplay');
         const discountBox = document.getElementById('discountDisplay');
         const btn = document.getElementById('btnSubmit');
+        const couponInput = document.getElementById('couponInput');
+        const successMsg = document.getElementById('couponSuccessMsg');
 
         if (data.status === 'error') {
             errorBox.innerText = data.message;
@@ -256,6 +258,8 @@ async function calcTotal() {
             discountBox.innerText = "";
             btn.disabled = true; 
             btn.style.backgroundColor = "#ccc";
+            couponInput.classList.remove('input-success');
+            successMsg.classList.remove('show');
         } else {
             errorBox.style.display = 'none';
             priceBox.innerText = `¥${data.total_price.toLocaleString()}`;
@@ -263,9 +267,13 @@ async function calcTotal() {
                 subtotalBox.innerText = `¥${data.subtotal.toLocaleString()}`;
                 subtotalBox.style.display = 'block'; 
                 discountBox.innerText = `(クーポン適用 -¥${data.discount})`;
+                couponInput.classList.add('input-success');
+                successMsg.classList.add('show');
             } else {
                 subtotalBox.style.display = 'none'; 
                 discountBox.innerText = "";
+                couponInput.classList.remove('input-success');
+                successMsg.classList.remove('show');
             }
 
             btn.disabled = false;
