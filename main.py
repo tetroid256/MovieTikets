@@ -9,6 +9,9 @@ from pydantic import BaseModel
 import uuid
 import datetime
 import os
+import io
+import base64
+import qrcode
 
 # 自分の作ったファイルをインポートする
 from models import Ticket, Movie, Order, OrderLog, CalcRequest
@@ -75,6 +78,21 @@ def save_order_to_csv(order_data: OrderLog):
             order_data.total_price,
             order_data.coupon_used
         ])
+
+def make_qr_code(data: str):
+    # QRコード生成
+    qr = qrcode.QRCode(version=1, box_size=10, border=4)
+    qr.add_data(data)
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
+    
+    # 画像をメモリ上に保存してBase64文字列に変換
+    buffered = io.BytesIO()
+    img.save(buffered, format="PNG")
+    img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
+    
+    # HTMLの<img>タグで使える形式で返す
+    return f"data:image/png;base64,{img_str}"
     
 MOVIE_DB = get_movie_data()
 
@@ -194,6 +212,8 @@ def show_result(
 
     save_order_to_csv(order_log)
 
+    #QRコード化
+    qr_code_data = make_qr_code(new_order_id)
 
     return templates.TemplateResponse("result.html", {
         "request": request,
@@ -204,5 +224,7 @@ def show_result(
         "ticket_details": ticket_details,
         "subtotal": subtotal,
         "discount": discount,
-        "total_price": total_fee
+        "total_price": total_fee,
+        "order_id": new_order_id,
+        "qr_code": qr_code_data
 })
