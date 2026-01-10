@@ -353,7 +353,7 @@ function shareAndApplyCoupon() {
     window.open(url, '_blank');
 
     // 2. クーポンコードを自動入力
-    const couponCode = "SNS2025"; 
+    const couponCode = "SNS2026"; 
     const input = document.getElementById('couponInput');
     input.value = couponCode;
     
