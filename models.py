@@ -1,19 +1,17 @@
 import settings
-class Movie:#値段を持つだけ
-    def __init__(
-        self, 
-        id: str,
-        title: str,
-        image_url: str,
-        duration: int,
-    ):
-        #self.id = id,？？？ここにカンマ置いたやつ絶対に許さない。
-        self.id = id
-        self.title = title
-        self.image_url = image_url
-        self.prices = {}
-        self.duration = duration
-        self.start_time = []
+from pydantic import BaseModel, Field
+from typing import List, Dict
+
+class Movie(BaseModel):
+    id: str
+    title: str
+    image_url: str
+    duration: int
+    
+    prices: Dict[str, int] = Field(default_factory=dict)
+    start_time: List[str] = Field(default_factory=list)
+    #self.id = id,？？？ここにカンマ置いたやつ絶対に許さない。
+    #過去の私にさようなら。
     
 class Ticket:
     def __init__(self, age: int, is_member: int, movie: Movie, count: int = 1):
@@ -97,3 +95,21 @@ class Order:
     
     def get_total_price(self):
         return max(self.get_subtotal() - self.discount, 0)
+    
+class CalcRequest(BaseModel):
+    movie_id: str
+    ages: List[int]
+    is_members: List[int]
+    coupon_code: str = "" 
+    
+class OrderLog(BaseModel):
+    order_id: str
+    timestamp: str
+    movie_title: str
+    watch_date: str
+    watch_time: str
+    seat: str
+    representative: str
+    head_count: int
+    total_price: int
+    coupon_used: str

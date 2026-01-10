@@ -13,6 +13,7 @@ DATA_DIR = "data"
 MOVIES_CSV = os.path.join(DATA_DIR, "movies.csv")
 PRICES_CSV = os.path.join(DATA_DIR, "prices.csv")
 SCHEDULES_CSV = os.path.join(DATA_DIR, "schedules.csv")
+ORDERS_CSV = os.path.join(DATA_DIR, "orders.csv")
 
 #クーポンコード
 COUPONS = {

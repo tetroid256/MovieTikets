@@ -8,11 +8,11 @@ from typing import List
 from pydantic import BaseModel
 import uuid
 import datetime
+import os
 
 # 自分の作ったファイルをインポートする
-from models import Ticket, Movie, Order
-from settings import MOVIES_CSV, PRICES_CSV, SCHEDULES_CSV
-
+from models import Ticket, Movie, Order, OrderLog, CalcRequest
+from settings import MOVIES_CSV, PRICES_CSV, SCHEDULES_CSV, ORDERS_CSV, COUPONS
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -49,6 +49,32 @@ def get_movie_data():
                 movie_database[mid].start_time.append(start_time)
 
     return movie_database
+
+def save_order_to_csv(order_data: OrderLog):
+    file_exists = os.path.isfile(ORDERS_CSV)
+    
+    with open(ORDERS_CSV, mode='a', encoding='utf-8', newline='') as f:
+        writer = csv.writer(f)
+        
+        if not file_exists:
+            writer.writerow([
+                "order_id", "timestamp", "movie_title", 
+                "watch_date", "watch_time", "seat", 
+                "representative", "head_count", "total_price", "coupon_used"
+            ])
+            
+        writer.writerow([
+            order_data.order_id,
+            order_data.timestamp,
+            order_data.movie_title,
+            order_data.watch_date,
+            order_data.watch_time,
+            order_data.seat,
+            order_data.representative,
+            order_data.head_count,
+            order_data.total_price,
+            order_data.coupon_used
+        ])
     
 MOVIE_DB = get_movie_data()
 
@@ -73,13 +99,6 @@ def get_booking_page(request: Request, movie_id: str):
         "request": request,
         "movie": movie
     })
-
-# APIが受け取るデータの設計図
-class CalcRequest(BaseModel):
-    movie_id: str
-    ages: List[int]
-    is_members: List[int]
-    coupon_code: str = "" # クーポンは必須じゃないのでデフォルト空文字
 
 @app.post("/api/calc")
 def calculate_price_api(data: CalcRequest):
@@ -130,6 +149,7 @@ def show_result(
     current_order = Order()
     ticket_details = []
 
+    #計算部
     for name, age, is_member_int in zip(names, ages, is_members):
         is_member_bool = (is_member_int == 1)
         ticket = Ticket(age=age, is_member=is_member_bool, movie=watch_movie)
@@ -151,6 +171,29 @@ def show_result(
     current_order.set_coupon(discount)
     subtotal = current_order.get_subtotal()
     total_fee = current_order.get_total_price()
+
+    #CSV保存
+    new_order_id = str(uuid.uuid4())
+    try:
+        w_date, w_time = date.split(' ')
+    except ValueError:
+        w_date, w_time = date, ""
+
+    order_log = OrderLog(
+        order_id=new_order_id,
+        timestamp=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        movie_title=watch_movie.title,
+        watch_date=w_date,
+        watch_time=w_time,
+        seat=seat,
+        representative=names[0], # 代表者名
+        head_count=len(names),
+        total_price=total_fee,
+        coupon_used=coupon_code
+    )
+
+    save_order_to_csv(order_log)
+
 
     return templates.TemplateResponse("result.html", {
         "request": request,
