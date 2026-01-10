@@ -151,7 +151,6 @@ def show_result(
     current_order.set_coupon(discount)
     subtotal = current_order.get_subtotal()
     total_fee = current_order.get_total_price()
-    print(f"{subtotal},{total_fee}")
 
     return templates.TemplateResponse("result.html", {
         "request": request,
