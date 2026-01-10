@@ -193,6 +193,10 @@ async function calcTotal() {
     const ages = document.querySelectorAll('.inp-age');
     const members = document.querySelectorAll('.inp-member');
     const coupon = document.getElementById('couponInput').value;
+    const postCoupon = document.getElementById('postCoupon');
+    if (postCoupon) {
+        postCoupon.value = coupon;
+    }
     
     const ageList = [];
     const memberList = [];
