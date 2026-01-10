@@ -143,3 +143,32 @@ input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radiu
     box-shadow: 0 0 0 3px rgba(0, 184, 148, 0.2); /* ぼわっと光らせる */
     transition: all 0.3s ease;
 }
+
+/* --- バリデーションエラー用 --- */
+
+/* 入力欄をラップするコンテナ（レイアウト崩れ防止） */
+.input-wrapper {
+    flex: 1; /* 横並びの中で幅を確保 */
+    display: flex;
+    flex-direction: column;
+}
+
+/* エラー時の入力欄（赤枠） */
+.input-error {
+    border-color: #ff7675 !important;
+    background-color: #fff0f0 !important;
+}
+
+/* エラーメッセージ（最初は隠す） */
+.field-error-text {
+    color: #ff7675;
+    font-size: 0.8rem;
+    margin-top: 4px;
+    font-weight: bold;
+    display: none; /* 通常は非表示 */
+}
+
+/* エラー時に表示するクラス */
+.field-error-text.show {
+    display: block;
+}

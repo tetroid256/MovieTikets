@@ -178,14 +178,26 @@ function renderPassengerForms() {
             <div class="seat-badge">${seat}</div>
             <div class="form-group">
                 <div class="form-row">
-                    <input type="text" class="inp-name" placeholder="お名前" required>
-                    <select class="inp-member" onchange="calcTotal()">
-                        <option value="0">非会員</option>
-                        <option value="1">会員</option>
-                    </select>
+                    <!-- お名前欄: wrapperで包んでエラーメッセージを追加 -->
+                    <div class="input-wrapper">
+                        <input type="text" class="inp-name" placeholder="お名前" required>
+                        <div class="field-error-text">お名前を入力してください</div>
+                    </div>
+
+                    <!-- 会員選択: エラーは出ないがレイアウト合わせでwrapperに入れる -->
+                    <div class="input-wrapper">
+                        <select class="inp-member" onchange="calcTotal()">
+                            <option value="0">非会員</option>
+                            <option value="1">会員</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="form-row">
-                    <input type="number" class="inp-age" placeholder="年齢" onchange="calcTotal()" required>
+                    <!-- 年齢欄: wrapperで包んでエラーメッセージを追加 -->
+                    <div class="input-wrapper">
+                        <input type="number" class="inp-age" placeholder="年齢" onchange="calcTotal()" required>
+                        <div class="field-error-text">年齢を入力してください</div>
+                    </div>
                 </div>
             </div>
         </div>`;
@@ -272,15 +284,43 @@ function submitOrder() {
     const form = document.getElementById('finalForm');
     document.getElementById('postDate').value = `${bookingData.date} ${bookingData.time}`;
     document.getElementById('postSeat').value = bookingData.seats.join(",");
-    
+    const couponValue = document.getElementById('couponInput').value;
+    document.getElementById('postCoupon').value = couponValue;
+
     const names = document.querySelectorAll('.inp-name');
     const ages = document.querySelectorAll('.inp-age');
     const members = document.querySelectorAll('.inp-member');
-    const couponValue = document.getElementById('couponInput').value;
-    document.getElementById('postCoupon').value = couponValue;
     
-    for(let n of names) {
-        if(!n.value) return alert("お名前を入力してください");
+    let hasError = false; // エラーがあるかどうかのフラグ
+
+    // 名前のチェック
+    names.forEach(input => {
+        if (!input.value.trim()) {
+            input.classList.add('input-error'); // 赤枠にする
+            input.nextElementSibling.classList.add('show'); // メッセージ出す
+            hasError = true;
+        } else {
+            input.classList.remove('input-error'); // 赤枠消す
+            input.nextElementSibling.classList.remove('show'); // メッセージ消す
+        }
+    });
+
+    // 年齢のチェック
+    ages.forEach(input => {
+        if (!input.value) {
+            input.classList.add('input-error');
+            input.nextElementSibling.classList.add('show');
+            hasError = true;
+        } else {
+            input.classList.remove('input-error');
+            input.nextElementSibling.classList.remove('show');
+        }
+    });
+
+    // エラーがひとつでもあれば送信を中断
+    if (hasError) {
+        // 必要なら画面上部へスクロールするなど
+        return; 
     }
 
     names.forEach(el => addHidden(form, "names", el.value));
