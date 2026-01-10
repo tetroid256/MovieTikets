@@ -18,5 +18,6 @@ ORDERS_CSV = os.path.join(DATA_DIR, "orders.csv")
 #クーポンコード
 COUPONS = {
     "WELCOME2025": 500,
-    "LUCKY777": 300
+    "LUCKY777": 300,
+    "SNS2025": 200
 }

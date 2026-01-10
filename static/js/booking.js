@@ -153,6 +153,12 @@ function goStep(step) {
         calcTotal(); 
         bookingData.needFormUpdate = false;
     }
+    const snsBtn = document.getElementById('snsShareBtn');
+    if (step === 3) {
+        snsBtn.style.display = 'flex';
+    } else {
+        snsBtn.style.display = 'none';
+    }
 
     document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
     document.getElementById('step' + step).classList.add('active');
@@ -290,4 +296,22 @@ function addHidden(form, name, value) {
     i.name = name;
     i.value = value;
     form.appendChild(i);
+}
+
+function shareAndApplyCoupon() {
+    // 1. ツイート画面を別タブで開く
+    const text = encodeURIComponent(`映画「${document.querySelector('.movie-title').innerText.replace('予約: ', '')}」を予約しました！ #MovieTickets`);
+    const url = "https://twitter.com/intent/tweet?text=" + text;
+    window.open(url, '_blank');
+
+    // 2. クーポンコードを自動入力
+    const couponCode = "SNS2025"; 
+    const input = document.getElementById('couponInput');
+    input.value = couponCode;
+    
+    // 3. 少し待ってから適用ボタンを押したことにする（演出）
+    setTimeout(() => {
+        calcTotal(); // 計算を実行
+    }, 1000);
+    input.classList.add('input-success');
 }

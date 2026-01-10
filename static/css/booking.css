@@ -94,3 +94,52 @@ input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radiu
 .btn-next { background: #2d3436; color: #fff; }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+
+/* --- SNSシェアボタン --- */
+.sns-float-btn {
+    position: fixed;
+    bottom: 100px; /* フッター(bottom:0)と被らないように少し上へ */
+    left: 20px;
+    
+    display: none; /* 最初は隠す (JSでStep3の時だけ出す) */
+    align-items: center;
+    gap: 10px;
+    
+    background-color: #000; /* Xカラー */
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 50px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    cursor: pointer;
+    z-index: 2000; /* 最前面 */
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 2px solid #333;
+}
+
+.sns-float-btn:hover {
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+
+.sns-icon svg {
+    width: 20px;
+    height: 20px;
+    fill: #fff;
+    display: block;
+}
+
+.sns-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.sns-label { font-size: 0.7rem; color: #ccc; }
+.sns-code { font-size: 0.9rem; font-weight: bold; color: #f1c40f; /* ゴールド */ }
+
+.input-success {
+    border-color: #00b894 !important; /* ミントグリーン */
+    background-color: #f0fffa !important; /* 薄い緑の背景 */
+    box-shadow: 0 0 0 3px rgba(0, 184, 148, 0.2); /* ぼわっと光らせる */
+    transition: all 0.3s ease;
+}
